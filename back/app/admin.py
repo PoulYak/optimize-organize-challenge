@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models.manager import Manager
+from .models.facility import Facility
+from .models.solution import Solution
+
+admin.site.register(Manager)
+admin.site.register(Facility)
+admin.site.register(Solution)
