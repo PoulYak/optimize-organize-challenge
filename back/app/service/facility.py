@@ -11,6 +11,10 @@ def all():
     return Facility.objects.all()
 
 
+def get_by_id(id: int):
+    return Facility.objects.get(id=id)
+
+
 def create(**kwargs):
     facility = Facility.objects.create(
         region=kwargs['region'],

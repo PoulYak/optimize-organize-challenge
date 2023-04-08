@@ -25,8 +25,8 @@ class FacilityView(LoginRequiredMixin, View):
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(
-            {'success': 'false', 'message': 'unsupported method'},status=403)
+            {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def put(self, request, *args, **kwargs):
         return JsonResponse(
-            {'success': 'false', 'message': 'unsupported method'},status=403)
+            {'success': 'false', 'message': 'unsupported method'}, status=403)

@@ -1,1 +1,2 @@
 Django==4.1.6
+XlsxWriter~=3.0.9
