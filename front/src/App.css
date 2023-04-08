@@ -1,38 +1,388 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Manrope&display=swap");
+
+:root {
+    --main-color: #49A078;
+    --accent-color: #8ECAAC;
+    --light-color: #EEF8F3;
+}
+
 .App {
-  text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100vh;
+    font-family: 'Manrope', sans-serif;
+    /*font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;*/
+    background-color: #f8f9fd;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.form input[type="text"],
+.form input[type="password"] {
+    height: 25px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.form input[type="submit"] {
+    margin-top: 10px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+input[type="submit"] {
+    cursor: pointer;
+    font-size: 15px;
+    background: #01d28e;
+    border: 1px solid #01d28e;
+    color: #fff;
 }
 
-.App-link {
-  color: #61dafb;
+.form input[type="submit"]:hover {
+    background: #6cf0c2;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.login-form {
+    background-color: white;
+    padding: 2rem;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.list-container {
+    display: flex;
+}
+
+.error {
+    color: red;
+    font-size: 12px;
+}
+
+.title {
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px;
+}
+
+.Dashboard {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: auto;
+    height: auto;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.header {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    background: var(--light-color);
+    border-bottom: var(--main-color) 1px solid;
+    padding: 10px 0;
+}
+
+.search-bar-wrapper {
+    display: flex;
+    flex-direction: row;
+    width: 50%;
+    background: var(--main-color);
+    border-radius: 10px;
+}
+
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: #f8f9fd;
+    border-radius: 10px;
+    margin: 5px 5px 5px 7px;
+    height: 30px;
+}
+
+.search-bar-wrapper form {
+    display: flex;
+    flex-direction: row;
+    width: 70%;
+}
+
+.search-bar-wrapper input[type="text"] {
+    flex: 1;
+    border: none;
+    background: none;
+}
+
+.search-bar-wrapper input[type="text"]:focus {
+    outline: none;
+}
+
+.search-btn {
+    flex-basis: 100px;
+    margin: 5px 0;
+    justify-content: center;
+    align-items: center;
+    background: none;
+    cursor: pointer;
+    border: none;
+}
+
+.search-btn path {
+    transition: color 0.3s ease;
+}
+
+.search-btn:hover path {
+    transition: color 0.3s ease;
+    color: black;
+}
+
+.filter-container {
+    max-width: 200px;
+    flex-basis: 200px;
+}
+
+.filter-container, .cards-container {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+}
+
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tags-container {
+    display: flex;
+    flex-direction: row;
+    width: 59%;
+    box-sizing: border-box;
+    justify-content: stretch;
+    flex-wrap: wrap;
+    padding: 10px;
+    margin-left: 260px;
+}
+
+.Badge {
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-color);
+    border: var(--main-color) 1px solid;
+    padding: 15px;
+    margin: 3px;
+    border-radius: 5px;
+}
+
+.Badge svg {
+    margin-left: 10px;
+}
+
+.Badge path {
+    color: var(--main-color);
+    transition: color 0.3s ease-in-out;
+}
+
+.Badge:hover {
+    cursor: pointer;
+}
+
+.Badge:hover path {
+    color: black;
+    transition: color 0.3s ease-in-out;
+}
+
+.Badge p {
+    user-select: none;
+    color: var(--main-color);
+    font-family: Manrope, sans-serif;
+}
+
+input[type="checkbox"] {
+    /*cursor: pointer;*/
+    /*margin: 3px 4px;*/
+    /*!*margin: 0;*!*/
+    /*background: #fff;*/
+    /*appearance: none;*/
+    /*accent-color: var(--main-color);*/
+    /*border: 1px solid var(--main-color);*/
+    /*width: 18px;*/
+    /*height: 18px;*/
+    /*transition: all 0.3s ease-in-out;*/
+    color: var(--main-color)
+}
+
+/*input[type="checkbox"]:checked {*/
+/*    background: var(--main-color);*/
+/*}*/
+
+input[type="checkbox"]:before {
+    content: "\2714";
+    display: block;
+    text-align: center;
+    font-size: 14px;
+    color: #fff;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 10px;
+}
+
+.checkbox-label {
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+
+
+.cards-container {
+    flex: 1;
+}
+
+.thumb {
+    height: 25px;
+    line-height: 25px;
+    width: 25px;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
+    cursor: grab;
+}
+
+.horizontal-slider {
+    margin: 10px;
+    height: 25px;
+}
+
+.track-0, .track-1, .track-2 {
+    top: 0;
+    bottom: 0;
+    background: saddlebrown;
+    border-radius: 999px;
+}
+
+.track-0, .track-2 {
+    background: #ddd;
+}
+
+.track-1 {
+    background: #0f0;
+}
+
+
+.NumberCategory {
+    margin: 10px;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.under-slider-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.under-slider-input input {
+    display: flex;
+    flex: 1;
+    width: 30px;
+    border: none;
+    margin: 10px;
+}
+
+.under-slider-input input::-webkit-outer-spin-button,
+.under-slider-input input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.under-slider-input input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.right-container {
+    flex: 1;
+    max-width: 300px;
+    /*background: #6cf0c2;*/
+}
+
+.pretty-button {
+    background: none;
+    border: var(--main-color) 1px solid;
+    padding: 5px;
+    margin: 3px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.pretty-button:hover {
+    cursor: pointer;
+    background: var(--accent-color);
+    transition: background-color 0.3s ease-in-out;
+}
+
+.pretty-button path {
+    color: var(--main-color);
+}
+
+.FacilityCard {
+    width: 240px;
+    height: 320px;
+    margin: 30px;
+    box-shadow: 0 0 7px rgba(103, 159, 133, 0.25);
+    border-radius: 5px;
+}
+
+.FacilityCard img {
+    width: 200px;
+    height: 200px;
+    margin: 20px 20px 0;
+    border-radius: 5px;
+}
+
+.FacilityCard p {
+    margin: 0;
+    text-align: center;
+}
+
+.cards-grid {
+    height: 100%;
+    width: 100%;
+}
+
+.FacilityCard p.status {
+    margin-top: 45px;
+    margin-right: 10px;
+    text-align: end;
+    color: var(--main-color);
 }
