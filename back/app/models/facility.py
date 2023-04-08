@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -14,12 +13,3 @@ class Facility(models.Model):
     media = models.CharField(
         max_length=1000)  # путь к картинке(???), будет локальный пока что
     # возможно нужны будут пермишены
-
-
-class Solution(models.Model):
-    facility = models.ForeignKey(Facility, on_delete=models.CASCADE)
-
-
-class Manager(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=100)
