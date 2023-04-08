@@ -84,5 +84,6 @@ class FacilitySerializer(Serializer):
             sols.append(sol_dto)
         mapped_object.update({'solutions': sols})
         for media in obj.media_set.all():
-            mapped_object['media'].append({'path': media.path})
+            mapped_object['media'].append(
+                {'path': media.path, 'name': media.name, 'type': media.type})
         return mapped_object
