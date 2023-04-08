@@ -45,8 +45,9 @@ def get_user(request: HttpRequest) -> JsonResponse:
     user = manager.get(request.user.username)
     serializer = ManagerSerializer()
     res = {'success': 'true'}
-    res.update(serializer.get_dump_object(user))
-    return JsonResponse(res)
+    data = serializer.get_dump_object(user)
+    data.update(res)
+    return JsonResponse(data)
 
 
 @login_required

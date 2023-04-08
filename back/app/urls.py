@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import user, tag
+from .views import user, tag, facility
 
 urlpatterns = [
     # path('', views.index, name="index"),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('role/', user.get_role, name='get_role'),
     path('user/', user.get_user, name='get_user'),
     path('tags/', tag.get_all, name='get_tags'),
+    path('facilities/', facility.get_all, name='get_facilities'),
 ]
