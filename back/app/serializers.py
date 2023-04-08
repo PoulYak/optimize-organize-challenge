@@ -22,7 +22,7 @@ class TagSerializer(Serializer):
             'id': obj.id,
             'name': obj.name,
             'type': obj.type,
-
+            'required': obj.required,
         }
 
         if obj.type == 'e':
@@ -44,8 +44,8 @@ class FacilitySerializer(Serializer):
             'status': obj.status,
             'area': obj.area,
             'owner': obj.owner,
-            'fact_user ': obj.fact_user
-            # добавить медиа
+            'fact_user ': obj.fact_user,
+            'media': []
         }
         tags = []
         tag_serializer = TagSerializer()
@@ -83,4 +83,6 @@ class FacilitySerializer(Serializer):
             sol_dto.update({'deadline': sol_dto.get('deadline').timestamp()})
             sols.append(sol_dto)
         mapped_object.update({'solutions': sols})
+        for media in obj.media_set.all():
+            mapped_object['media'].append({'path': media.path})
         return mapped_object
