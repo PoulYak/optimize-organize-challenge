@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import user, tag, facility
+from .views import user, tag, facility, solution
 
 urlpatterns = [
     # path('', views.index, name="index"),
@@ -8,5 +8,7 @@ urlpatterns = [
     path('role/', user.get_role, name='get_role'),
     path('user/', user.get_user, name='get_user'),
     path('tags/', tag.TagView.as_view(), name='crud_tags'),
-    path('facilities/', facility.get_all, name='get_facilities'),
+    path('facilities/', facility.FacilityView.as_view(),
+         name='crud_facilities'),
+    path('solutions/', solution.SolutionView.as_view(), name="create_solution")
 ]

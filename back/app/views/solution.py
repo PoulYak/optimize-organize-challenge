@@ -1,27 +1,23 @@
 import json
 
 from django.http import HttpRequest, JsonResponse, HttpResponse
-from ..service import tag
-from ..serializers import TagSerializer
 
+from ..service import solution
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class TagView(LoginRequiredMixin, View):
+class SolutionView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args,
             **kwargs) -> JsonResponse | HttpResponse:
-        query = tag.all()
-        serializer = TagSerializer()
-        tags = serializer.serialize(query)
-        res = '{"success": "true", "tags": ' + tags + "}"
-        return HttpResponse(res, content_type='application/json')
+        return JsonResponse(
+            {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
         body = json.loads(request.body)
-        tag.create(**body)
+        solution.create(**body)
         return JsonResponse(
-            {'success': 'true', 'message': 'tag created'})
+            {'success': 'true', 'message': 'solution created'})
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(
