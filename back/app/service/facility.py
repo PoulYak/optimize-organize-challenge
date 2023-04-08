@@ -36,5 +36,6 @@ def create(**kwargs):
             fh.write(base64.decodebytes(file['content'].encode()))
         file_obj = Media.objects.create(name=file['name'],
                                         type=file['type'],
-                                        path=img_path)
+                                        path=img_path,
+                                        facility=facility)
         file_obj.save()
