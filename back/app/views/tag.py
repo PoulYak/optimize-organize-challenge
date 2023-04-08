@@ -1,4 +1,3 @@
-import simplejson as simplejson
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from ..service import tag

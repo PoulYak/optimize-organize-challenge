@@ -35,6 +35,7 @@ class TagSerializer(Serializer):
 class FacilitySerializer(Serializer):
     def get_dump_object(self, obj: Facility):
         mapped_object = {
+            'id': obj.id,
             'region': obj.region,
             'district': obj.district,
             'address': obj.address,
@@ -57,7 +58,7 @@ class FacilitySerializer(Serializer):
 
             match tag.type:
                 case 'n':
-                    mapped_object.update({'value': float(tag_value.value)})
+                    tag_dto.update({'value': float(tag_value.value)})
                 case 'b':
                     value = True
                     falsish_values = ['false', False, 'False', '', 'FALSE', '0',
@@ -65,13 +66,13 @@ class FacilitySerializer(Serializer):
                                       None]
                     if tag_value.value in falsish_values:
                         value = False
-                    mapped_object.update({'value': value})
+                    tag_dto.update({'value': value})
                 case 'd':
                     date, time = tag_value.value.split()
                     d, m, y = date.split(".")
                     hours, mins, secs = time.split(":")
                     dt = datetime(int(y), int(m), int(d), int(hours), int(mins))
-                    mapped_object.update({'value': dt.timestamp()})
+                    tag_dto.update({'value': dt.timestamp()})
             tags.append(tag_dto)
         mapped_object.update({'tags': tags})
         return mapped_object
