@@ -22,9 +22,9 @@ function Dashboard() {
     const [search, setSearch] = useState("");
     const [createOpen, setCreateOpen] = useState(false);
     const [uploadOpen, setUploadOpen] = useState(false);
-    const [cardOpen, setCardOpen] = useState<Facility | null>(null);
+    const [cardOpen, setCardOpen] = useState<number | null>(null);
     const categories = useSelector((state: RootState) => state.rootReducer.categories)
-    const facilities = useSelector((state : RootState) => state.facilitiesReducer.facilities)
+    const facilities = useSelector((state: RootState) => state.facilitiesReducer.facilities)
     const dispatch = useDispatch()
     useEffect(() => {
         async function fetchTags() {
@@ -32,7 +32,7 @@ function Dashboard() {
             const body = await response.json()
             const _tags: Tag[] = body.tags;
             const tags = [...defaultTags, ..._tags]
-            dispatch(initTags({tags, facilities}))
+            dispatch(initTags({tags}))
         }
 
         dispatch(fetchFacilities() as any)
@@ -76,10 +76,10 @@ function Dashboard() {
     };
 
     const downloadReport = async () => {
-        const ids = facilities.filter(filter).map(value => value.id)
+        const ids = Object.values(facilities).filter(filter).map(value => value.id)
         const response = await fetch("/api/report/", {
             method: "POST",
-            headers: { "Content-type": "application/json" },
+            headers: {"Content-type": "application/json"},
             body: JSON.stringify({
                 facilities: ids
             })
@@ -117,8 +117,8 @@ function Dashboard() {
                 <div className="main-container">
                     <div className="tags-container">
                         <button className="report-btn" onClick={() => downloadReport()}>
-                                <span>Скачать отчет</span>
-                                <FontAwesomeIcon icon={faDownload}/>
+                            <span>Скачать отчет</span>
+                            <FontAwesomeIcon icon={faDownload}/>
                         </button>
                         {
                             search !== "" ? <Badge name={search} onClick={() => setSearch("")}/> : null
@@ -144,8 +144,9 @@ function Dashboard() {
                     <div className="cards-container">
                         <Grid className="cards-grid" columns={3} container rowGap={0}>
                             {
-                                facilities.filter(filter).map(value => {
-                                    return <Grid item><FacilityCard facility={value} key={value.id} onClick={() => setCardOpen(value)}/></Grid>
+                                Object.values(facilities).filter(filter).map(value => {
+                                    return <Grid item><FacilityCard facility={value} key={value.id}
+                                                                    onClick={() => setCardOpen(value.id)}/></Grid>
                                 })
                             }
                         </Grid>

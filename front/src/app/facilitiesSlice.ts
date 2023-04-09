@@ -5,11 +5,13 @@ import {Facility} from "./dashboard/FacilityCard";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 
 export interface FacilitiesState {
-    facilities: Facility[];
+    facilities: {
+        [key: number]: Facility
+    };
 }
 
 const initialState: FacilitiesState = {
-    facilities: []
+    facilities: {}
 }
 
 export const fetchFacilities = createAsyncThunk(
@@ -17,7 +19,9 @@ export const fetchFacilities = createAsyncThunk(
     async () => {
         const response = await fetch("/api/facilities/");
         const body = await response.json();
-        return body.facilities;
+        return Object.fromEntries(body.facilities.map((value: Facility) =>
+            [value.id, value]
+        ));
     }
 );
 export const facilitiesSlice = createSlice({

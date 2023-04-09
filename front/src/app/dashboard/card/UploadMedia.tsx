@@ -5,6 +5,8 @@ import React, {useState} from "react";
 import {DomEvent} from "leaflet";
 import preventDefault = DomEvent.preventDefault;
 import {getMediaBase64} from "../../utils/fileUtils";
+import {fetchFacilities} from "../../facilitiesSlice";
+import {useDispatch} from "react-redux";
 
 export interface DialogProps {
     open: boolean;
@@ -18,6 +20,7 @@ export interface DialogProps {
 
 export function UploadDialog(props: DialogProps) {
     const [files, setFiles] = useState<File[]>([]);
+    const dispatch = useDispatch()
 
     const submit = async () => {
         if (files.length === 0) {
@@ -41,6 +44,7 @@ export function UploadDialog(props: DialogProps) {
                 method: "POST",
                 body: JSON.stringify(body)
             })
+            dispatch(fetchFacilities() as any)
             props.onClose()
         }
     };

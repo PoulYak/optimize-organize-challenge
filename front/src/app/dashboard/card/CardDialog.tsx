@@ -7,9 +7,11 @@ import React, {useState} from "react";
 import {MapPage} from "./MapPage";
 import {SolutionsPage} from "./SolutionsPage";
 import {AssignmentsPage} from "./AssignmentsPage";
+import {useSelector} from "react-redux";
+import {RootState} from "../../store";
 
 interface CardDialogProps {
-    cardOpened: Facility | null;
+    cardOpened: number | null;
 
     onClose(): void;
 }
@@ -23,10 +25,13 @@ enum CardDialogTab {
 }
 
 export function CardDialog(props: CardDialogProps) {
+    const facilities = useSelector((state: RootState) => state.facilitiesReducer.facilities)
+    const facility = facilities[props.cardOpened || 0]
     const [tab, setTab] = useState(CardDialogTab.Info);
 
-    return (<Dialog classes={{paperWidthXl: "overflow", root:"card-dialog-root"}} maxWidth={"xl"} open={props.cardOpened !== null}>
-        <div className="card-dialog">
+    return (<Dialog classes={{paperWidthXl: "overflow", root: "card-dialog-root"}} maxWidth={"xl"}
+                    open={props.cardOpened !== null}>
+        {facility ? (<div className="card-dialog">
             <div className={"card-tabs"}>
                 {
                     Object.entries(CardDialogTab).map(value => {
@@ -39,8 +44,8 @@ export function CardDialog(props: CardDialogProps) {
             <div className="card-main">
                 <header className="card-header">
                     <div className="card-header-left">
-                        <span className="card-header-title">{props.cardOpened?.address}</span>
-                        <span className="card-header-status">{statusNames[props.cardOpened?.obj_status || ""]}</span>
+                        <span className="card-header-title">{facility.address}</span>
+                        <span className="card-header-status">{statusNames[facility.obj_status || ""]}</span>
                     </div>
                     <div className="card-header-right">
                         <button className="pretty-button">
@@ -57,16 +62,16 @@ export function CardDialog(props: CardDialogProps) {
                         (() => {
                             switch (tab) {
                                 case CardDialogTab.Info:
-                                    return props.cardOpened ? <InfoPage facility={props.cardOpened}/> : null;
+                                    return <InfoPage facility={facility}/>;
                                 case CardDialogTab.Map:
-                                    return props.cardOpened ? <MapPage position={{
-                                        lng: props.cardOpened.lng,
-                                        lat: props.cardOpened.lat,
-                                    }}/> : null;
+                                    return <MapPage position={{
+                                        lng: facility.lng,
+                                        lat: facility.lat,
+                                    }}/>;
                                 case CardDialogTab.Solutions:
-                                    return props.cardOpened ? <SolutionsPage facility={props.cardOpened}/> : null;
+                                    return <SolutionsPage facility={facility}/>;
                                 case CardDialogTab.Assignments:
-                                    return props.cardOpened ? <AssignmentsPage facility={props.cardOpened}/> : null;
+                                    return <AssignmentsPage facility={facility}/>;
                                 case CardDialogTab.Calendar:
                                     return <div/>;
                             }
@@ -74,6 +79,7 @@ export function CardDialog(props: CardDialogProps) {
                     }
                 </div>
             </div>
-        </div>
+        </div>) : null
+        }
     </Dialog>)
 }

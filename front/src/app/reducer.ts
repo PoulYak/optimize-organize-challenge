@@ -17,10 +17,9 @@ const slice = createSlice({
     initialState,
     reducers: {
         initTags(state, action: PayloadAction<{
-            tags: Tag[],
-            facilities: Facility[]
+            tags: Tag[]
         }>) {
-            const {tags, facilities} = action.payload
+            const {tags} = action.payload
             state.categories = []
             for (const tag of tags) {
                 if (tag.type === TagType.Enum) {
