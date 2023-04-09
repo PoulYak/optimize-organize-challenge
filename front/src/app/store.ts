@@ -1,12 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './reducer'
 import tagsReducer from './tagsSlice'
+import facilitiesReducer from './facilitiesSlice'
+import roleReducer from './roleSlice'
 
 export const store = configureStore({
     reducer: {
         // Add your reducers here
         rootReducer,
-        tagsReducer
+        tagsReducer,
+        facilitiesReducer,
+        roleReducer
     }
 });
 

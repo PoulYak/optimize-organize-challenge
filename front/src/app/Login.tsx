@@ -1,5 +1,7 @@
 import {ChangeEvent, ChangeEventHandler, FormEventHandler, useState} from "react"
 import {RequestOptions} from "http";
+import {fetchLogin} from "./roleSlice";
+import {useDispatch} from "react-redux";
 
 interface Credentials {
     login: string;
@@ -11,6 +13,7 @@ function LoginForm() {
         login: '',
         password: '',
     })
+    const dispatch = useDispatch()
     const handleChange: ChangeEventHandler<HTMLFormElement> = event => {
         const { name, value } = event.target
         setFormData((prevState) => ({ ...prevState, [name]: value }))
@@ -24,6 +27,7 @@ function LoginForm() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(formData)
         })
+        dispatch(fetchLogin() as any)
         console.log(data)
     }
     return (

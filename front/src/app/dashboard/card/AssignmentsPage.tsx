@@ -27,7 +27,7 @@ export function AssignmentsPage(props: AssignmentsPageProps) {
                 assignments.map(value => {
                     return (<tr>
                         <td>{value.description}</td>
-                        <td>{new Date(value.deadline).toDateString()}</td>
+                        <td>{new Date(value.deadline * 1000).toDateString()}</td>
                         <td>{statusNames[value.status]}</td>
                         <td>{value.assignee}</td>
                     </tr>)

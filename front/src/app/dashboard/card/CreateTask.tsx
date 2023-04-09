@@ -3,6 +3,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faX} from "@fortawesome/free-solid-svg-icons";
 import React, {FormEvent, useState} from "react";
 import DatePicker from "react-datepicker";
+import {fetchFacilities} from "../../facilitiesSlice";
+import {useDispatch} from "react-redux";
 
 interface CreateTaskProps {
     open: boolean;
@@ -18,13 +20,13 @@ export function CreateTask(props: CreateTaskProps) {
     const [desc, setDesc] = useState("");
     const [date, setDate] = useState(new Date());
     const [assignee, setAssignee] = useState("");
-
+    const dispatch = useDispatch()
     const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const body = {
             facility_id: props.facility_id,
             description: desc,
-            deadline: date.getTime() / 1000,
+            deadline: Math.round(date.getTime() / 1000),
             assignee: assignee
         }
         await fetch(props.endpoint, {
@@ -32,6 +34,7 @@ export function CreateTask(props: CreateTaskProps) {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
         })
+        dispatch(fetchFacilities() as any)
         props.onClose()
     };
 

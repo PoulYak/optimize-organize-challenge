@@ -4,46 +4,50 @@ import {faX} from "@fortawesome/free-solid-svg-icons";
 import React, {useState} from "react";
 import {DomEvent} from "leaflet";
 import preventDefault = DomEvent.preventDefault;
-import {useDispatch} from "react-redux";
-import {fetchFacilities} from "../../facilitiesSlice";
+import {getMediaBase64} from "../../utils/fileUtils";
 
 export interface DialogProps {
     open: boolean;
     onClose: () => void;
+
+    type: string;
+    id: number;
+    content_type: string;
 }
 
+
 export function UploadDialog(props: DialogProps) {
-    const [file, setFile] = useState<File | null>(null);
-    const dispatch = useDispatch()
+    const [files, setFiles] = useState<File[]>([]);
+
     const submit = async () => {
-        if (file === null) {
+        if (files.length === 0) {
             alert("Выберите файл!")
         } else {
-            const filePromise = new Promise<string>((resolve, reject) => {
-                const reader = new FileReader()
-                reader.readAsText(file, "UTF-8")
-                reader.onloadend = ev => {
-                    const result = reader.result
-                    resolve(result as string)
-                }
-                reader.onerror = ev => {
-                    reject()
-                }
-            })
+            const promises = getMediaBase64(files)
 
-            await fetch("/api/load_xml/", {
+            const media = await Promise.all(promises)
+
+
+            const body = {
+                media: media.map(value => ({
+                    ...value,
+                    [`${props.type}_id`]: props.id,
+                }))
+            }
+
+
+
+            await fetch("/api/media/", {
                 method: "POST",
-                headers: { "Content-type": "application/xml" },
-                body: await filePromise
+                body: JSON.stringify(body)
             })
-            dispatch(fetchFacilities() as any)
             props.onClose()
         }
     };
     return (<Dialog open={props.open}>
         <header className="card-header">
             <div className="card-header-left">
-                <span className="card-header-title">Загрузка XML</span>
+                <span className="card-header-title">Загрузка файла</span>
             </div>
             <div className="card-header-right">
                 <button className="close-button" onClick={props.onClose}>
@@ -52,7 +56,8 @@ export function UploadDialog(props: DialogProps) {
             </div>
         </header>
         <div>
-            <input type="file" accept=".xml" onChange={event => setFile(event.target.files ? event.target.files[0] : null)}/>
+            <input type="file" accept={props.content_type} multiple
+                   onChange={event => setFiles(event.target.files ? Array.from(event.target.files) : [])}/>
             <button className="pretty-button" onClick={submit}>Upload</button>
         </div>
     </Dialog>)

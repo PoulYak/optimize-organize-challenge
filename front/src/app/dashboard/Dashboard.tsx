@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Badge} from "./Badge";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faMagnifyingGlass, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faDownload, faMagnifyingGlass, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {Category} from "./categories/Category";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -14,6 +14,9 @@ import {initTags, setCheckedCategory} from "../reducer";
 import defaultTags, {tagNames} from "../defaultTags";
 import {CardDialog} from "./card/CardDialog";
 import {UploadDialog} from "./create/UploadXml";
+import {fetchFacilities} from "../facilitiesSlice";
+import {downloadFile} from "../utils/fileUtils";
+import {fetchLogin} from "../roleSlice";
 
 function Dashboard() {
     const [search, setSearch] = useState("");
@@ -21,15 +24,9 @@ function Dashboard() {
     const [uploadOpen, setUploadOpen] = useState(false);
     const [cardOpen, setCardOpen] = useState<Facility | null>(null);
     const categories = useSelector((state: RootState) => state.rootReducer.categories)
-    const [facilities, setFacilities] = useState<Facility[]>([]);
+    const facilities = useSelector((state : RootState) => state.facilitiesReducer.facilities)
     const dispatch = useDispatch()
     useEffect(() => {
-        async function fetchFacilities() {
-            const response = await fetch("/api/facilities/")
-            const body = await response.json()
-            setFacilities(body.facilities)
-        }
-
         async function fetchTags() {
             const response = await fetch("/api/tags/")
             const body = await response.json()
@@ -38,7 +35,8 @@ function Dashboard() {
             dispatch(initTags({tags, facilities}))
         }
 
-        fetchFacilities().then(fetchTags)
+        dispatch(fetchFacilities() as any)
+        fetchTags().then()
     }, []);
 
 
@@ -54,6 +52,7 @@ function Dashboard() {
         await fetch("/api/logout/", {
             method: "POST"
         })
+        dispatch(fetchLogin() as any)
     };
 
     const handleClose = () => {
@@ -74,6 +73,19 @@ function Dashboard() {
             }
         }
         return true
+    };
+
+    const downloadReport = async () => {
+        const ids = facilities.filter(filter).map(value => value.id)
+        const response = await fetch("/api/report/", {
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify({
+                facilities: ids
+            })
+        })
+        const body = await response.json()
+        downloadFile(`http://127.0.0.1:8000${body.path}`, "report.xlsx")
     };
 
     return (
@@ -104,6 +116,10 @@ function Dashboard() {
                 </div>
                 <div className="main-container">
                     <div className="tags-container">
+                        <button className="report-btn" onClick={() => downloadReport()}>
+                                <span>Скачать отчет</span>
+                                <FontAwesomeIcon icon={faDownload}/>
+                        </button>
                         {
                             search !== "" ? <Badge name={search} onClick={() => setSearch("")}/> : null
                         }

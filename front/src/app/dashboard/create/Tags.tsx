@@ -13,6 +13,8 @@ import {DomUtil, LatLng} from "leaflet";
 import setPosition = DomUtil.setPosition;
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencil, faX} from "@fortawesome/free-solid-svg-icons";
+import {fetchFacilities} from "../../facilitiesSlice";
+import {getMediaBase64} from "../../utils/fileUtils";
 
 
 interface Fields {
@@ -48,24 +50,7 @@ function Tags({onClose}: { onClose: () => void }) {
             alert("Выберите локацию!!!")
             return
         }
-        const promises = fields.files.map(file => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader()
-                reader.readAsBinaryString(file)
-                reader.onloadend = function (event) {
-                    const result = reader.result
-                    resolve({
-                        name: file.name,
-                        type: file.type.startsWith("image") ? "p" : "d",
-                        content: btoa(result as string)
-                    })
-                }
-                reader.onerror = function () {
-                    console.log("couldn't read the file")
-                    reject()
-                }
-            })
-        });
+        const promises = getMediaBase64(fields.files)
 
         const media = await Promise.all(promises)
         console.log(tagState)
@@ -94,6 +79,7 @@ function Tags({onClose}: { onClose: () => void }) {
             headers: {"Content-Type": "application/json"},
             body: body
         })
+        dispatch(fetchFacilities() as any)
         onClose()
     };
     const changeFiles: ChangeEventHandler<HTMLInputElement> = (event) => {

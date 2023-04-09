@@ -28,7 +28,7 @@ export function SolutionsPage(props: SolutionsPageProps) {
                 solutions.map(value => {
                     return (<tr key={value.id}>
                         <td>{value.description}</td>
-                        <td>{new Date(value.deadline).toDateString()}</td>
+                        <td>{new Date(value.deadline * 1000).toDateString()}</td>
                         <td>{value.assignee}</td>
                     </tr>)
                 })

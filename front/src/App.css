@@ -174,12 +174,36 @@ input[type="submit"] {
 .tags-container {
     display: flex;
     flex-direction: row;
-    width: 59%;
+    width: 100%;
     box-sizing: border-box;
     justify-content: stretch;
     flex-wrap: wrap;
     padding: 10px;
-    margin-left: 260px;
+    margin-left: 17px;
+}
+
+.report-btn {
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+    box-sizing: border-box;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--main-color);
+    border: var(--main-color) 1px solid;
+    padding: 15px;
+    margin: 3px;
+    color: white;
+    border-radius: 5px;
+}
+
+.report-btn svg {
+    margin-left: 10px;
+}
+
+.report-btn path {
+    color: white;
+    transition: color 0.3s ease-in-out;
 }
 
 .Badge {
@@ -319,7 +343,8 @@ input[type="checkbox"]:before {
 
 .right-container {
     flex: 1;
-    max-width: 300px;
+    max-width: 400px;
+    margin-right: 40px;
     /*background: #6cf0c2;*/
 }
 
@@ -347,17 +372,17 @@ input[type="checkbox"]:before {
 }
 
 .FacilityCard {
-    width: 240px;
-    height: 320px;
+    width: 320px;
+    height: 426px;
     margin: 30px;
     box-shadow: 0 0 7px rgba(103, 159, 133, 0.25);
     border-radius: 5px;
 }
 
 .FacilityCard img {
-    width: 200px;
-    height: 200px;
-    margin: 20px 20px 0;
+    width: 260px;
+    height: 260px;
+    margin: 30px 30px 0;
     border-radius: 5px;
 }
 

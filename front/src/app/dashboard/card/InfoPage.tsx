@@ -3,6 +3,8 @@ import {TagValue} from "../../TagTypes";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Carousel} from "react-responsive-carousel";
+import {UploadDialog} from "./UploadMedia";
+import {useState} from "react";
 
 interface InfoPageProps {
     facility: Facility
@@ -25,6 +27,7 @@ function shrinkText(text: string) {
 
 
 export function InfoPage(props: InfoPageProps) {
+    const [uploadContentType, setUploadContentType] = useState<string | null>(null);
     return (<div className="InfoPage">
         <div className="attribute-container">
             <table>
@@ -72,7 +75,7 @@ export function InfoPage(props: InfoPageProps) {
             <div className="image-container">
                 <div className="label-icon-container">
                     <h2>Фото</h2>
-                    <button className="icon-button">
+                    <button className="icon-button" onClick={() => setUploadContentType("image/*")}>
                         <FontAwesomeIcon icon={faUpload}/>
                     </button>
                 </div>
@@ -89,7 +92,7 @@ export function InfoPage(props: InfoPageProps) {
             <div className="documents-container">
                 <div className="label-icon-container">
                     <h2>Документы</h2>
-                    <button className="icon-button">
+                    <button className="icon-button" onClick={() => setUploadContentType(".doc,.docx,.pdf")}>
                         <FontAwesomeIcon icon={faUpload}/>
                     </button>
                 </div>
@@ -111,6 +114,7 @@ export function InfoPage(props: InfoPageProps) {
                 </ol>
             </div>
         </div>
+        <UploadDialog open={!!uploadContentType} onClose={() => setUploadContentType(null)} type="facility" id={props.facility.id} content_type={uploadContentType || ""}/>
     </div>)
 }
 
