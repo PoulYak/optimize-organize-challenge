@@ -9,14 +9,12 @@ from datetime import datetime
 
 
 def create_from_bytes(**kwargs):
+    ext = kwargs['name'].split('.')[-1]
     uid = str(uuid.uuid4())
-    ext = '.' + kwargs['name'].split('.')[-1]
-    img_path = str((settings.MEDIA_ROOT / uid)) + ext
+    img_path = str((settings.MEDIA_ROOT / uid)) + "." + ext
     with open(img_path, "wb+") as fh:
-        fh.write(base64.decodebytes(kwargs['content'].encode()))
-    img_path = f'/media/{uid + ext}'
-    file_obj = Media.objects.create(name=file['name'],
-                                    type=file['type'],
-                                    path=img_path,
-                                    facility=facility)
+        fh.write(kwargs['bin_data'])
+    Media.objects.create(name=kwargs['name'],
+                         id=kwargs['id'],
+                         )
     file_obj.save()
