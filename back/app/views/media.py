@@ -1,25 +1,27 @@
 import json
 
-from django.http import HttpRequest, JsonResponse, HttpResponse
-
-from ..service import solution
-from ..utils.notify import notify
-from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+
+from ..service.media import create
 
 
-class SolutionView(LoginRequiredMixin, View):
+@method_decorator(csrf_exempt, name='dispatch')
+class MediaView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args,
             **kwargs) -> JsonResponse | HttpResponse:
         return JsonResponse(
             {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        body = json.loads(request.body)
-        solution.create(**body)
-        notify()
+        files = json.loads(request.body)
+        for f in files['media']:
+            create(**f)
         return JsonResponse(
-            {'success': 'true', 'message': 'solution created'})
+            {'success': 'true', 'message': 'media created'})
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(

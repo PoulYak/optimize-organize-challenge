@@ -6,6 +6,7 @@ from django.views import View
 
 from ..serializers import FacilitySerializer
 from ..service import facility
+from ..utils.notify import notify
 
 
 class FacilityView(LoginRequiredMixin, View):
@@ -16,10 +17,10 @@ class FacilityView(LoginRequiredMixin, View):
         res = '{"success":"true", "facilities": ' + facilities + "}"
         return HttpResponse(res, content_type="application/json")
 
-    # TODO: media files
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
         body = json.loads(request.body)
         facility.create(**body)
+        notify()
         return JsonResponse(
             {'success': 'true', 'message': 'facility created'})
 

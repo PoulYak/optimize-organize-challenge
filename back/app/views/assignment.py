@@ -2,13 +2,13 @@ import json
 
 from django.http import HttpRequest, JsonResponse, HttpResponse
 
-from ..service import solution
+from ..service import assignment
 from ..utils.notify import notify
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class SolutionView(LoginRequiredMixin, View):
+class AssignmentView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args,
             **kwargs) -> JsonResponse | HttpResponse:
         return JsonResponse(
@@ -16,10 +16,10 @@ class SolutionView(LoginRequiredMixin, View):
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
         body = json.loads(request.body)
-        solution.create(**body)
+        assignment.create(**body)
         notify()
         return JsonResponse(
-            {'success': 'true', 'message': 'solution created'})
+            {'success': 'true', 'message': 'assignment created'})
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(

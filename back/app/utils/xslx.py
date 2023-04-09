@@ -4,6 +4,7 @@ import uuid
 import xlsxwriter
 import datetime
 from django.conf import settings
+from ..service.facility import get_by_id
 
 
 def make_fst_line(ws, type_ws):
@@ -15,7 +16,7 @@ def make_fst_line(ws, type_ws):
     ws.write(0, 5, "Статус")
     ws.write(0, 6, "Площадь")
     ws.write(0, 7, "Владелец")
-    ws.write(0, 8, "Fact_user")
+    ws.write(0, 8, "Пользователь")
     ws.write(0, 9, "Теги")
     if type_ws:
         ws.write(0, 10, "Назначенные работники")
@@ -31,7 +32,7 @@ def make_i_line(ws, type_ws, list_args, ws_cou, dl):
     ws.write(ws_cou, 5, list_args["status"])
     ws.write(ws_cou, 6, list_args["area"])
     ws.write(ws_cou, 7, list_args["owner"])
-    ws.write(ws_cou, 8, list_args["fact_user "])  # Уточнить, что это значит
+    ws.write(ws_cou, 8, list_args["fact_user"])
     tags = ""
     for aaa in list_args["tags"]:
         tags += str(aaa["name"]) + ": " + str(aaa["value"]) + "; "
@@ -49,10 +50,9 @@ def make_i_line(ws, type_ws, list_args, ws_cou, dl):
 def make_report(facilities):
     reports_json = json.loads(facilities)
     uid = uuid.uuid4()
-    img_path = str((settings.STATICFILES_DIRS[0] / str(uid))) + ".xlsx"
+    img_path = str((settings.MEDIA_ROOT / str(uid))) + ".xlsx"
     workbook = xlsxwriter.Workbook(img_path)
-    # Добавить стартовую страничку с пояснениями
-    ns = workbook.add_worksheet("НЕ НАЧАТЫЕ ПРОЕКТЫ")
+    ns = workbook.add_worksheet("ПРОЕКТЫ БЕЗ ПОРУЧЕНИЙ")
     st = workbook.add_worksheet("ПРОЕКТЫ В РАБОТЕ")
     fn = workbook.add_worksheet("ПРОСРОЧЕННЫЕ ПРОЕКТЫ")
     cou_ns = 0
@@ -62,25 +62,24 @@ def make_report(facilities):
     make_fst_line(st, 1)
     make_fst_line(fn, 1)
     for i in range(len(reports_json["facilities"])):
-        deadline = -1
-        if reports_json["facilities"][i]["solutions"]:
-            deadline = 9999999999
-            for j in reports_json["facilities"][i]["solutions"]:
-                if j:
-                    deadline = j["deadline"] * (deadline > j["deadline"])
-        if deadline == -1:
+        facil = get_by_id(reports_json['facilities'][i]['id'])
+        obj_status = facil.obj_status
+        if obj_status == 'n':
             cou_ns += 1
-            make_i_line(ns, 0, reports_json["facilities"][i], cou_ns, deadline)
-        elif datetime.datetime.fromtimestamp(
-                deadline) <= datetime.datetime.today():
+            make_i_line(ns, 0, reports_json["facilities"][i], cou_ns, 0)
+        elif obj_status == 'd':
+            for j in facil.assignment_set.all():
+                if j.status == 'd':
+                    deadline = j.deadline.timestamp()
+                    break
             cou_fn += 1
             make_i_line(fn, 1, reports_json["facilities"][i], cou_fn,
                         str(datetime.datetime.fromtimestamp(deadline)))
-        elif datetime.datetime.fromtimestamp(
-                deadline) > datetime.datetime.today():
+        elif obj_status == 'w':
             cou_st += 1
             make_i_line(st, 1, reports_json["facilities"][i], cou_st,
-                        str(datetime.datetime.fromtimestamp(deadline)))
+                        str(datetime.datetime.fromtimestamp(
+                            facil.assignment_set.first().deadline.timestamp())))
     workbook.close()
-    img_path = '/static/' + str(uid) + '.xlsx'
+    img_path = '/media/' + str(uid) + '.xlsx'
     return img_path

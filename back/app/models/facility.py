@@ -1,5 +1,7 @@
 from django.db import models
 
+from ..models.work_group import WorkGroup
+
 
 class Facility(models.Model):
     region = models.CharField(max_length=1000)  # округ
@@ -12,6 +14,19 @@ class Facility(models.Model):
     fact_user = models.CharField(max_length=1000)  # фактический пользователь
     lat = models.FloatField()
     lng = models.FloatField()
-    next_meeting_date = models.CharField(max_length=30,
-                                         default=None,
-                                         null=True)  # timestamp следующей встречи
+    next_meeting_date = models.DateTimeField(
+        null=True)  # дата следующей встречи
+    work_group = models.ForeignKey(WorkGroup, on_delete=models.RESTRICT,
+                                   default=None,
+                                   null=True)
+
+    @property
+    def obj_status(self):
+        assignments = self.assignment_set.all()
+        if len(assignments) == 0:
+            return 'n'
+        if any([i.status == 'd' for i in assignments]):
+            return 'd'
+        if all([i.status == 'c' for i in assignments]):
+            return 'c'
+        return 'w'

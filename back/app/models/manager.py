@@ -9,3 +9,4 @@ class Manager(models.Model):
     role = models.CharField(max_length=100)
     work_group = models.ForeignKey(WorkGroup, on_delete=models.RESTRICT,
                                    null=True)
+    name = models.CharField(max_length=250)
