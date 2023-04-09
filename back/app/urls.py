@@ -11,7 +11,7 @@ urlpatterns = [
     path('facilities/', facility.FacilityView.as_view(),
          name='crud_facilities'),
     path('solutions/', solution.SolutionView.as_view(), name="create_solution"),
-    path('solutions/', assignment.AssignmentView.as_view(),
+    path('assignments/', assignment.AssignmentView.as_view(),
          name="create_assignment"),
     path('report/', misc.get_report, name="get_report"),
     path('load_xml/', misc.create_from_xml, name="create_from_xml")
