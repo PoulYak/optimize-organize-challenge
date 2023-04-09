@@ -19,7 +19,6 @@ from django.urls import path, include
 
 from . import settings
 
-urlpatterns = [
-                  path('admin/', admin.site.urls),
-                  path('api/', include('app.urls'))
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns = [path('admin/', admin.site.urls),
+               path('api/', include('app.urls'))
+               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

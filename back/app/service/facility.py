@@ -43,10 +43,10 @@ def create(**kwargs):
     for file in kwargs['media']:
         uid = str(uuid.uuid4())
         ext = '.' + file['name'].split('.')[-1]
-        img_path = str((settings.STATICFILES_DIRS[0] / uid)) + ext
+        img_path = str((settings.MEDIA_ROOT / uid)) + ext
         with open(img_path, "wb+") as fh:
             fh.write(base64.decodebytes(file['content'].encode()))
-        img_path = f'/static/{uid + ext}'
+        img_path = f'/media/{uid + ext}'
         file_obj = Media.objects.create(name=file['name'],
                                         type=file['type'],
                                         path=img_path,
