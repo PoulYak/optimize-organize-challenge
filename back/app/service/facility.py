@@ -25,10 +25,15 @@ def create(**kwargs):
         area=kwargs['area'],
         owner=kwargs['owner'],
         fact_user=kwargs['fact_user'],
+        lat=kwargs['lat'],
+        lng=kwargs['lng'],
     )
     facility.save()
     for tag_value in kwargs['tags']:
-        tag_value_obj = TagValue.objects.create(tag_id=tag_value['id'],
+        tag_id = tag_value['id']
+        if type(tag_id) == str:
+            tag_id = int(tag_id)
+        tag_value_obj = TagValue.objects.create(tag_id=tag_id,
                                                 value=tag_value['value'],
                                                 facility=facility)
         tag_value_obj.save()

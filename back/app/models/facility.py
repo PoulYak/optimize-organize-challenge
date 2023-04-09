@@ -10,3 +10,8 @@ class Facility(models.Model):
     area = models.FloatField()  # площадь
     owner = models.CharField(max_length=1000)  # собственник
     fact_user = models.CharField(max_length=1000)  # фактический пользователь
+    lat = models.FloatField()
+    lng = models.FloatField()
+    next_meeting_date = models.CharField(max_length=30,
+                                         default=None,
+                                         null=True)  # timestamp следующей встречи
