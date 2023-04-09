@@ -22,7 +22,7 @@ def create(**kwargs):
                                     path=img_path,
                                     facility_id=kwargs['facility_id'],
                                     assignment_id=kwargs['assignment_id'],
-                                    solution_id=kwargs['solution']
+                                    solution_id=kwargs['solution_id']
 
                                     )
     file_obj.save()
