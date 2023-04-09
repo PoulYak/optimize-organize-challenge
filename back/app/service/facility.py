@@ -4,7 +4,7 @@ from django.utils.timezone import make_aware
 
 from ..models.facility import Facility
 from ..models.tag import TagValue
-import media
+from ..service import media
 
 
 def all():
