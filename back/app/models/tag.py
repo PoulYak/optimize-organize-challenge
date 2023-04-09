@@ -8,6 +8,7 @@ TYPES = (('b', 'boolean'), ('e', 'enum'), ('s', 'string'), ('n', 'number'),
 class Tag(models.Model):
     name = models.CharField(max_length=1000)
     type = models.CharField(max_length=1, choices=TYPES)
+    required = models.BooleanField(default=False)
 
 
 class Option(models.Model):

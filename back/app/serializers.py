@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.core.serializers.json import Serializer
+from django.forms import model_to_dict
 
 from .models.tag import Tag
 from .models.manager import Manager
@@ -21,7 +22,7 @@ class TagSerializer(Serializer):
             'id': obj.id,
             'name': obj.name,
             'type': obj.type,
-
+            'required': obj.required,
         }
 
         if obj.type == 'e':
@@ -43,8 +44,8 @@ class FacilitySerializer(Serializer):
             'status': obj.status,
             'area': obj.area,
             'owner': obj.owner,
-            'fact_user ': obj.fact_user
-            # добавить медиа
+            'fact_user ': obj.fact_user,
+            'media': []
         }
         tags = []
         tag_serializer = TagSerializer()
@@ -75,4 +76,14 @@ class FacilitySerializer(Serializer):
                     tag_dto.update({'value': dt.timestamp()})
             tags.append(tag_dto)
         mapped_object.update({'tags': tags})
+        sols = []
+        for sol in obj.solution_set.all():
+            sol_dto = model_to_dict(sol)
+            sol_dto.pop('facility')
+            sol_dto.update({'deadline': sol_dto.get('deadline').timestamp()})
+            sols.append(sol_dto)
+        mapped_object.update({'solutions': sols})
+        for media in obj.media_set.all():
+            mapped_object['media'].append(
+                {'path': media.path, 'name': media.name, 'type': media.type})
         return mapped_object
