@@ -5,15 +5,16 @@ import {faMagnifyingGlass, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {Category} from "./categories/Category";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {CategoryType, toStrings} from "./categories/CategoryProps";
+import {BaseCategoryState, CategoryType, toStrings} from "./categories/CategoryProps";
 import CreateDialog from "../Tags";
 import {Grid} from "@mui/material";
 import {Facility, FacilityCard} from "./FacilityCard";
 import {Tag} from "../TagTypes";
-import {initTags} from "../reducer";
+import {initTags, setCheckedCategory} from "../reducer";
 import defaultTags, {tagNames} from "../defaultTags";
 
 function Dashboard() {
+    const [search, setSearch] = useState("");
     const [open, setOpen] = useState(false);
     const categories = useSelector((state: RootState) => state.rootReducer.categories)
     const [facilities, setFacilities] = useState<Facility[]>([]);
@@ -23,7 +24,6 @@ function Dashboard() {
             const response = await fetch("/api/facilities/")
             const body = await response.json()
             setFacilities(body.facilities)
-            console.log(facilities)
         }
 
         async function fetchTags() {
@@ -31,7 +31,7 @@ function Dashboard() {
             const body = await response.json()
             const _tags: Tag[] = body.tags;
             const tags = [...defaultTags, ..._tags]
-            dispatch(initTags({ tags, facilities }))
+            dispatch(initTags({tags, facilities}))
         }
 
         fetchFacilities().then(fetchTags)
@@ -40,7 +40,6 @@ function Dashboard() {
 
     const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        alert("xssss")
     }
 
     const voidHandler = () => {
@@ -48,7 +47,9 @@ function Dashboard() {
     };
 
     const logout = async () => {
-        console.log(await fetch("/api/logout"))
+        await fetch("/api/logout/", {
+            method: "POST"
+        })
     };
 
     const handleClose = () => {
@@ -56,14 +57,13 @@ function Dashboard() {
     };
 
     const filter = (facility: Facility) => {
+        if (search !== "" && !facility.address.toLowerCase().includes(search.toLowerCase())) return false;
         for (const category of categories) {
-            console.log(category.name)
             const val = facility.tags.find(value => value.name === category.name)?.value || (facility as any)[tagNames[category.id]]
             if (category.type === CategoryType.EnumCategory) {
                 const map = category.value as Map<string, boolean>
                 if (Array.from(map.values()).every(value => !value)) continue;
                 if (val === undefined) return false;
-                console.log(Array.from(map.entries()).filter(value => value[1]))
                 if (!Array.from(map.entries()).filter(value => value[1]).some(
                     value => value[0] == val
                 )) return false
@@ -77,14 +77,15 @@ function Dashboard() {
             <div className="header">
                 <form className="search-bar-wrapper" onSubmit={handleSearch}>
                     <div className="search-bar">
-                        <input type="text" onSelect={voidHandler}/>
+                        <input type="text" value={search} name="search_text" onSelect={voidHandler}
+                               onChange={event => setSearch(event.target.value)}/>
                     </div>
                     <button type="submit" className="search-btn">
                         <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" color="#f8f9fd"/>
                     </button>
                 </form>
                 <div className="logout-btn-container">
-                    <button className="logout-btn" onClick={logout}>Выйти</button>
+                    <button className="pretty-button" onClick={logout}>Выйти</button>
                 </div>
             </div>
             <div className="container">
@@ -100,13 +101,28 @@ function Dashboard() {
                 <div className="main-container">
                     <div className="tags-container">
                         {
-                            categories.flatMap(category => toStrings(category)).map(name => {
-                                return <Badge name={name}/>
-                            })
+                            search !== "" ? <Badge name={search} onClick={() => setSearch("")}/> : null
+                        }
+                        {
+                            categories.flatMap(category => toStrings(category)
+                                .map(value => ({category, value})))
+                                .map(value => {
+                                    return <Badge name={value.value} onClick={() => {
+                                        if (value.category.type === CategoryType.EnumCategory) {
+                                            console.log(value)
+                                            console.log(value.value.split(":").pop() || "")
+                                            dispatch(setCheckedCategory({
+                                                category: value.category.name,
+                                                value: value.value.split(":").pop() || "",
+                                                isChecked: false
+                                            }))
+                                        }
+                                    }}/>
+                                })
                         }
                     </div>
                     <div className="cards-container">
-                        <Grid className="cards-grid" columns={3} container>
+                        <Grid className="cards-grid" columns={3} container rowGap={0}>
                             {
                                 facilities.filter(filter).map(value => {
                                     return <Grid item><FacilityCard facility={value} key={value.id}/></Grid>

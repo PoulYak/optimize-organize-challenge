@@ -41,8 +41,11 @@ const slice = createSlice({
             isChecked: boolean
         }>) {
             const {category, value, isChecked} = action.payload;
+            console.log(state.categories)
             const categoryState = state.categories.find(c => c.name === category);
+            console.log(categoryState)
             if (categoryState && categoryState.type === CategoryType.EnumCategory) {
+                console.log(123);
                 (categoryState.value as Map<string, boolean>).set(value, isChecked);
             }
         },

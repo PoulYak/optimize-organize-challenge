@@ -8,6 +8,7 @@ export function Category(props: CategoryProps) {
     switch (props.category.type) {
         case CategoryType.EnumCategory:
             return EnumCategory({
+                id: props.category.id,
                 name: props.category.name,
                 value: props.category.value as Map<string, boolean>
             });
