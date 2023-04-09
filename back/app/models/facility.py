@@ -17,4 +17,6 @@ class Facility(models.Model):
     next_meeting_date = models.CharField(max_length=30,
                                          default=None,
                                          null=True)  # timestamp следующей встречи
-    work_group = models.ForeignKey(WorkGroup, on_delete=models.RESTRICT)
+    work_group = models.ForeignKey(WorkGroup, on_delete=models.RESTRICT,
+                                   default=None,
+                                   null=True)
