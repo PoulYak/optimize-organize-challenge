@@ -14,7 +14,8 @@ class Facility(models.Model):
     fact_user = models.CharField(max_length=1000)  # фактический пользователь
     lat = models.FloatField()
     lng = models.FloatField()
-    next_meeting_date = models.DateTimeField()  # дата следующей встречи
+    next_meeting_date = models.DateTimeField(
+        null=True)  # дата следующей встречи
     work_group = models.ForeignKey(WorkGroup, on_delete=models.RESTRICT,
                                    default=None,
                                    null=True)
