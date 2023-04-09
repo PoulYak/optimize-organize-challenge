@@ -6,6 +6,7 @@ from django.views import View
 
 from ..serializers import FacilitySerializer
 from ..service import facility
+from ..utils.notify import notify
 
 
 class FacilityView(LoginRequiredMixin, View):
@@ -20,6 +21,7 @@ class FacilityView(LoginRequiredMixin, View):
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
         body = json.loads(request.body)
         facility.create(**body)
+        notify()
         return JsonResponse(
             {'success': 'true', 'message': 'facility created'})
 

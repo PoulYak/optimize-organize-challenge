@@ -10,4 +10,3 @@ def create(**kwargs):
                                   description=kwargs['description'],
                                   facility_id=kwargs['facility_id'])
     sol.save()
-    # TODO: добавить статусы в фасилити

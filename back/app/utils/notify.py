@@ -1,10 +1,12 @@
+import json
 import sched
 
 import pandas as pd
 import datetime
 
 from .mail import send_event_created, send_event_reminder
-from ..service.facility import get_by_id, update_by_id
+from ..service.facility import get_by_id, update_by_id, all
+from ..serializers import FacilitySerializer
 
 
 def load_emails(data):
@@ -81,3 +83,10 @@ def event_scheduler(data):
                 send_event_reminder,
                 argument=(person, time_of_meeting_str, text))
     scheduler.run()
+
+
+def notify():
+    facilities = all()
+    serializer = FacilitySerializer()
+    event_scheduler(
+        json.loads('{"facilities":' + serializer.serialize(facilities) + '}'))
