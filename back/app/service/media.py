@@ -8,9 +8,9 @@ from ..models.media import Media
 
 def create(**kwargs):
     uid = str(uuid.uuid4())
-    kwargs.update({'facility_id': kwargs.get('facility_id', default=None)})
-    kwargs.update({'assignment_id': kwargs.get('assignment_id', default=None)})
-    kwargs.update({'solution_id': kwargs.get('solution_id', default=None)})
+    kwargs.update({'facility_id': kwargs.get('facility_id', None)})
+    kwargs.update({'assignment_id': kwargs.get('assignment_id', None)})
+    kwargs.update({'solution_id': kwargs.get('solution_id', None)})
 
     ext = '.' + kwargs['name'].split('.')[-1]
     img_path = str((settings.MEDIA_ROOT / uid)) + ext
