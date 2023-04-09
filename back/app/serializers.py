@@ -54,6 +54,10 @@ class FacilitySerializer(Serializer):
         if obj.next_meeting_date is not None:
             mapped_object.update(
                 {'next_meeting_date': obj.next_meeting_date.timestamp()})
+        else:
+            mapped_object.update(
+                {'next_meeting_date': None}
+            )
         if obj.work_group is not None:
             mapped_object.update({'work_group': obj.work_group.name})
         tags = []

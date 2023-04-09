@@ -25,8 +25,10 @@ def event_scheduler(data):
                "have_solutions": [], "work_group": [], "id": [],
                "address": []}
     for i in data["facilities"]:
-        if float(i["next_meeting_date"]) < datetime.datetime.timestamp(
-                datetime.datetime.now()):
+        if (i["next_meeting_date"] is not None) and float(
+                i["next_meeting_date"]) < datetime.datetime.timestamp(
+            datetime.datetime.now()
+        ):
             dataset["facility_type"].append(i["facility_type"])
             dataset["status"].append(i["status"])
             dataset["obj_status"].append(i["obj_status"])

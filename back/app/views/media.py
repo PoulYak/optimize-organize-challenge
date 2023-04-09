@@ -15,7 +15,7 @@ class MediaView(LoginRequiredMixin, View):
             {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        # create_from_bytes(bin_data)
+
         return JsonResponse(
             {'success': 'true', 'message': 'media created'})
 

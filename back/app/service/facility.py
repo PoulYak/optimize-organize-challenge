@@ -1,13 +1,10 @@
-import base64
-import uuid
 from datetime import datetime
 
 from django.utils.timezone import make_aware
 
 from ..models.facility import Facility
-from ..models.media import Media
 from ..models.tag import TagValue
-from django.conf import settings
+import media
 
 
 def all():
@@ -41,17 +38,7 @@ def create(**kwargs):
                                                 facility=facility)
         tag_value_obj.save()
     for file in kwargs['media']:
-        uid = str(uuid.uuid4())
-        ext = '.' + file['name'].split('.')[-1]
-        img_path = str((settings.MEDIA_ROOT / uid)) + ext
-        with open(img_path, "wb+") as fh:
-            fh.write(base64.decodebytes(file['content'].encode()))
-        img_path = f'/media/{uid + ext}'
-        file_obj = Media.objects.create(name=file['name'],
-                                        type=file['type'],
-                                        path=img_path,
-                                        facility=facility)
-        file_obj.save()
+        media.create(facility_id=facility.id, **file)
 
 
 def update_by_id(id: int, **kwargs):
