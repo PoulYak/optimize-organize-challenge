@@ -45,7 +45,11 @@ class FacilitySerializer(Serializer):
             'area': obj.area,
             'owner': obj.owner,
             'fact_user ': obj.fact_user,
-            'media': []
+            'lat': obj.lat,
+            'lng': obj.lng,
+            'next_meeting_date': obj.next_meeting_date,
+            'work_group': obj.work_group,
+            'media': [],
         }
         tags = []
         tag_serializer = TagSerializer()
