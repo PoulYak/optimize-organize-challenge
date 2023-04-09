@@ -1,5 +1,7 @@
 import json
+import uuid
 
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.files.storage import default_storage
 from django.http import HttpRequest, JsonResponse, HttpResponse
@@ -18,11 +20,14 @@ class MediaView(LoginRequiredMixin, View):
             {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        # print(request.body)
-        print(request.FILES)
-        # default_storage.save(file.name, file)
+        bin_data = request.body
+        print(str(bin_data))
+        uid = str(uuid.uuid4())
+        img_path = str((settings.MEDIA_ROOT / uid)) + ".jpg"
+        with open(img_path, "wb+") as fh:
+            fh.write(bin_data)
         return JsonResponse(
-            {'success': 'true', 'message': 'assignment created'})
+            {'success': 'true', 'message': 'media created'})
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(
