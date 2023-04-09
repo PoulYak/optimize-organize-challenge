@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Tag, TagValue } from './TagTypes';
+import {Tag, TagType, TagValue} from './TagTypes';
 
 interface Fields {
     files: File[];
@@ -25,6 +25,12 @@ export const tagsSlice = createSlice({
     reducers: {
         setTags: (state, action: PayloadAction<Tag[]>) => {
             state.tags = action.payload;
+            console.log("123")
+            let map = state.tags.filter(value => value.type === TagType.Enum && value.required).map(x => {
+                return [x.id, (x.options || [""])[0]] as [number, string]
+            });
+            console.log(state.tags)
+            state.state = new Map(map)
         },
         setTagValue: (state, action: PayloadAction<{ id: number; value: TagValue }>) => {
             const { id, value } = action.payload;

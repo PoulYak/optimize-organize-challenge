@@ -1,21 +1,39 @@
 import logo from '../../logo.svg';
 
+export const statusNames: { [key: string]: string} = {
+    n: "Нет поручений",
+    c: "Закрыт",
+    w: "В работе",
+    d: "Просрочен",
+}
+
+export enum FacilityStatus {
+    New = "n",
+    Closed = "c",
+    Working = "w",
+    Deadlined = "d",
+}
+
 export interface Facility {
     id: number;
     region: string;
     district: string;
     address: string;
+    obj_status: FacilityStatus;
     facility_type: string;
     status: string;
     area: number;
     owner: string;
     fact_user: string;
+    lat: number;
+    lng: number;
     media: Media[];
     tags: Tag[];
     solutions: Solution[];
+    assignments: Assignment[];
 }
 
-enum MediaType {
+export enum MediaType {
     Picture = "p",
     Document = "d"
 }
@@ -34,15 +52,29 @@ interface Tag {
     value: any;
 }
 
-interface Solution {
+export interface Solution {
     id: number;
     assignee: string;
     deadline: number;
     description: string;
 }
 
+export enum AssignmentStatus {
+    Working = "w",
+    Closed = "c",
+    Deadlined = "d"
+}
+
+export interface Assignment {
+    id: number;
+    assignee: string;
+    deadline: number;
+    description: string;
+    status: AssignmentStatus;
+}
 export interface FacilityCardProps {
     facility: Facility
+    onClick(): void;
 }
 
 export function FacilityCard(props: FacilityCardProps) {
@@ -58,10 +90,10 @@ export function FacilityCard(props: FacilityCardProps) {
 
 
     return (
-        <div className="FacilityCard">
+        <div onClick={event => props.onClick()} className="FacilityCard">
             <img src={x} className="Card-image" alt="Image"/>
             <p>{facility.address}</p>
-            <p className="status">{facility.status}</p>
+            <p className="status">{statusNames[facility.obj_status]}</p>
         </div>
     );
 }

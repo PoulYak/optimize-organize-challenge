@@ -5,17 +5,21 @@ import {faMagnifyingGlass, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {Category} from "./categories/Category";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
-import {BaseCategoryState, CategoryType, toStrings} from "./categories/CategoryProps";
-import CreateDialog from "../Tags";
+import {CategoryType, toStrings} from "./categories/CategoryProps";
+import CreateDialog from "./create/Tags";
 import {Grid} from "@mui/material";
 import {Facility, FacilityCard} from "./FacilityCard";
 import {Tag} from "../TagTypes";
 import {initTags, setCheckedCategory} from "../reducer";
 import defaultTags, {tagNames} from "../defaultTags";
+import {CardDialog} from "./card/CardDialog";
+import {UploadDialog} from "./create/UploadXml";
 
 function Dashboard() {
     const [search, setSearch] = useState("");
-    const [open, setOpen] = useState(false);
+    const [createOpen, setCreateOpen] = useState(false);
+    const [uploadOpen, setUploadOpen] = useState(false);
+    const [cardOpen, setCardOpen] = useState<Facility | null>(null);
     const categories = useSelector((state: RootState) => state.rootReducer.categories)
     const [facilities, setFacilities] = useState<Facility[]>([]);
     const dispatch = useDispatch()
@@ -53,8 +57,8 @@ function Dashboard() {
     };
 
     const handleClose = () => {
-        setOpen(false)
-    };
+        setCreateOpen(false)
+    }
 
     const filter = (facility: Facility) => {
         if (search !== "" && !facility.address.toLowerCase().includes(search.toLowerCase())) return false;
@@ -125,7 +129,7 @@ function Dashboard() {
                         <Grid className="cards-grid" columns={3} container rowGap={0}>
                             {
                                 facilities.filter(filter).map(value => {
-                                    return <Grid item><FacilityCard facility={value} key={value.id}/></Grid>
+                                    return <Grid item><FacilityCard facility={value} key={value.id} onClick={() => setCardOpen(value)}/></Grid>
                                 })
                             }
                         </Grid>
@@ -133,17 +137,19 @@ function Dashboard() {
                 </div>
                 <div className="right-container">
                     <h2>Право</h2>
-                    <button className="pretty-button">
+                    <button className="pretty-button" onClick={() => setUploadOpen(true)}>
                         <FontAwesomeIcon icon={faPlus} size="2xl"/>
                         Добавить объект по xml
                     </button>
-                    <button className="pretty-button" onClick={() => setOpen(true)}>
+                    <button className="pretty-button" onClick={() => setCreateOpen(true)}>
                         <FontAwesomeIcon icon={faPlus} size="2xl"/>
                         Добавить объект
                     </button>
                 </div>
             </div>
-            <CreateDialog open={open} onClose={handleClose}/>
+            <CreateDialog open={createOpen} onClose={handleClose}/>
+            <UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)}/>
+            <CardDialog cardOpened={cardOpen} onClose={() => setCardOpen(null)}/>
         </div>
     )
 }

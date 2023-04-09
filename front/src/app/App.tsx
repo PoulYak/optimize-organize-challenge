@@ -3,7 +3,7 @@ import logo from '../logo.svg';
 import '../App.css';
 import LoginForm from "./Login";
 import Dashboard from "./dashboard/Dashboard";
-import Tags from "./Tags";
+import Tags from "./dashboard/create/Tags";
 
 function App() {
   const [state, setState] = useState<boolean | undefined>(undefined);
