@@ -16,4 +16,5 @@ urlpatterns = [
     path('report/', misc.get_report, name="get_report"),
     path('load_xml/', misc.create_from_xml, name="create_from_xml"),
     path('media/', media.MediaView.as_view(), name="create_media"),
+    path('metrics/', misc.get_metrics, name="get_metrics"),
 ]
