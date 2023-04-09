@@ -97,7 +97,7 @@ class FacilitySerializer(Serializer):
             asg_dto = model_to_dict(asg)
             asg_dto.pop('facility')
             asg_dto.update({'deadline': asg_dto.get('deadline').timestamp()})
-            asg_dto['assignee'] = asg.assignee.name
+            asg_dto['assignee'] = asg.assignee
             asgs.append(asg_dto)
         mapped_object.update({'assignments': asgs})
         for media in obj.media_set.all():
