@@ -44,7 +44,7 @@ class FacilitySerializer(Serializer):
             'status': obj.status,
             'area': obj.area,
             'owner': obj.owner,
-            'fact_user ': obj.fact_user,
+            'fact_user': obj.fact_user,
             'lat': obj.lat,
             'lng': obj.lng,
             'media': [],
