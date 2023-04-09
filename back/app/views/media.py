@@ -18,7 +18,7 @@ class MediaView(LoginRequiredMixin, View):
             {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        print(request.body)
+        # print(request.body)
         print(request.FILES)
         # default_storage.save(file.name, file)
         return JsonResponse(
