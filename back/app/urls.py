@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import user, tag, facility, solution, misc, assignment
+from .views import user, tag, facility, solution, misc, assignment, media
 
 urlpatterns = [
     # path('', views.index, name="index"),
@@ -14,5 +14,6 @@ urlpatterns = [
     path('assignments/', assignment.AssignmentView.as_view(),
          name="create_assignment"),
     path('report/', misc.get_report, name="get_report"),
-    path('load_xml/', misc.create_from_xml, name="create_from_xml")
+    path('load_xml/', misc.create_from_xml, name="create_from_xml"),
+    path('media/', media.MediaView.as_view(), name="create_media"),
 ]

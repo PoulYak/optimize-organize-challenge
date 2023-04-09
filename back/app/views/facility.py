@@ -17,7 +17,6 @@ class FacilityView(LoginRequiredMixin, View):
         res = '{"success":"true", "facilities": ' + facilities + "}"
         return HttpResponse(res, content_type="application/json")
 
-    # TODO: media files
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
         body = json.loads(request.body)
         facility.create(**body)

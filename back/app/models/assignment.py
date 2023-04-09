@@ -1,7 +1,6 @@
 from django.db import models
 
 from .facility import Facility
-from .manager import Manager
 
 STATUS = (
     ('с', 'закрыт'),
@@ -16,4 +15,3 @@ class Assignment(models.Model):
     assignee = models.CharField(max_length=150)
     description = models.CharField(max_length=2000)
     facility = models.ForeignKey(Facility, on_delete=models.RESTRICT)
-    # media
