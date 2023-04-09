@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from .models.assignment import Assignment
 from .models.manager import Manager
 from .models.facility import Facility
 from .models.solution import Solution
@@ -15,3 +16,4 @@ admin.site.register(Option)
 admin.site.register(TagValue)
 admin.site.register(Media)
 admin.site.register(WorkGroup)
+admin.site.register(Assignment)

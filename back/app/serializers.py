@@ -47,10 +47,15 @@ class FacilitySerializer(Serializer):
             'fact_user ': obj.fact_user,
             'lat': obj.lat,
             'lng': obj.lng,
-            'next_meeting_date': obj.next_meeting_date,
-            'work_group': obj.work_group,
             'media': [],
+            'obj_status': obj.obj_status,
+            'work_group': None,
         }
+        if obj.next_meeting_date is not None:
+            mapped_object.update(
+                {'next_meeting_date': obj.next_meeting_date.timestamp()})
+        if obj.work_group is not None:
+            mapped_object.update({'work_group': obj.work_group.name})
         tags = []
         tag_serializer = TagSerializer()
         for tag_value in obj.tagvalue_set.all():
@@ -81,12 +86,20 @@ class FacilitySerializer(Serializer):
             tags.append(tag_dto)
         mapped_object.update({'tags': tags})
         sols = []
+        asgs = []
         for sol in obj.solution_set.all():
             sol_dto = model_to_dict(sol)
             sol_dto.pop('facility')
             sol_dto.update({'deadline': sol_dto.get('deadline').timestamp()})
             sols.append(sol_dto)
         mapped_object.update({'solutions': sols})
+        for asg in obj.assignment_set.all():
+            asg_dto = model_to_dict(asg)
+            asg_dto.pop('facility')
+            asg_dto.update({'deadline': asg_dto.get('deadline').timestamp()})
+            asg_dto['assignee'] = asg.assignee.name
+            asgs.append(asg_dto)
+        mapped_object.update({'assignments': asgs})
         for media in obj.media_set.all():
             mapped_object['media'].append(
                 {'path': media.path, 'name': media.name, 'type': media.type})
