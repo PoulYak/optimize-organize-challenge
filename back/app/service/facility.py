@@ -1,5 +1,8 @@
 import base64
 import uuid
+from datetime import datetime
+
+from django.utils.timezone import make_aware
 
 from ..models.facility import Facility
 from ..models.media import Media
@@ -49,3 +52,14 @@ def create(**kwargs):
                                         path=img_path,
                                         facility=facility)
         file_obj.save()
+
+
+def update_by_id(id: int, **kwargs):
+    facility = Facility.objects.get(id=id)
+    for arg in kwargs:
+        if arg == 'next_meeting_date':
+            facility.next_meeting_date = make_aware(datetime.fromtimestamp(
+                kwargs[arg]))
+
+        setattr(facility, arg, kwargs[arg])
+    facility.save()
