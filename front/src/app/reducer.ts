@@ -8,13 +8,13 @@ import defaultTags from "./defaultTags";
 export interface RootState {
     categories: BaseCategoryState[],
     tags: Tag[],
-    work_groups: string[],
+    // work_groups: string[],
 }
 
 const initialState: RootState = {
     categories: [],
     tags: [],
-    work_groups: [],
+    // work_groups: [],
 }
 
 export const fetchTags = createAsyncThunk(
@@ -25,7 +25,7 @@ export const fetchTags = createAsyncThunk(
         const tags: Tag[] = body.tags;
         // const work_groups = (await (await fetch("/api/workgroups/")).json()).work_groups
         // const work_groups = ["23"]
-        return {tags}
+        return tags
     }
 )
 
@@ -58,7 +58,7 @@ const slice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchTags.fulfilled, (state, action) => {
-                const {tags} = action.payload
+                const tags = action.payload
                 state.categories = []
                 state.tags = tags
                 // state.work_groups = work_groups
@@ -68,7 +68,7 @@ const slice = createSlice({
                             id: tag.id,
                             name: tag.name,
                             type: CategoryType.EnumCategory,
-                            value: new Map(tag.options?.map(value => {
+                            value: new Map(tag.options?.map((value: any) => {
                                 return [value, false]
                             }))
                         })
