@@ -19,7 +19,6 @@ def load_emails(data):
     return rg_mails
 
 
-# TODO: скедул, который должен вызывать это
 def event_scheduler(data):
     dataset = {"facility_type": [], "status": [], "obj_status": [],
                "have_solutions": [], "work_group": [], "id": [],

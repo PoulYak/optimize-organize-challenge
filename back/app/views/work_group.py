@@ -1,27 +1,24 @@
 import json
 
-from django.http import HttpRequest, JsonResponse, HttpResponse
-
-from ..service import solution
-from ..utils.metrics import load_chart
-from ..utils.notify import notify
-from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, JsonResponse
+from django.views import View
+from ..service import work_group
 
 
-class SolutionView(LoginRequiredMixin, View):
+class WorkGroupListView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args,
-            **kwargs) -> JsonResponse | HttpResponse:
+            **kwargs) -> JsonResponse:
         return JsonResponse(
-            {'success': 'false', 'message': 'unsupported method'}, status=403)
+            {'success': 'true',
+             'work_groups': list(work_group.all().values('name'))})
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        body = json.loads(request.body)
-        solution.create(**body)
-        notify()
-        load_chart()
+        data = json.loads(request.body)['work_group']
+        work_group.create(**data)
         return JsonResponse(
-            {'success': 'true', 'message': 'solution created'})
+            {'success': 'true',
+             'message': 'work group created'})
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(

@@ -1,10 +1,12 @@
 from datetime import datetime
 
+from django.contrib.auth.models import User
 from django.utils.timezone import make_aware
 
 from ..models.facility import Facility
 from ..models.tag import TagValue
 from ..service import media
+from ..service import work_group
 
 
 def all():
@@ -27,6 +29,7 @@ def create(**kwargs):
         fact_user=kwargs['fact_user'],
         lat=kwargs['lat'],
         lng=kwargs['lng'],
+        work_group=work_group.get_by_name(kwargs['work_group'])
     )
     facility.save()
     for tag_value in kwargs['tags']:
@@ -50,3 +53,11 @@ def update_by_id(id: int, **kwargs):
 
         setattr(facility, arg, kwargs[arg])
     facility.save()
+
+
+def get_accessible(user: User):
+    if user.manager.role == "a":
+        return all()
+    facilities = Facility.objects.all().filter(
+        work_group=user.manager.work_group)
+    return facilities

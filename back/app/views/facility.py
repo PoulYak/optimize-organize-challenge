@@ -6,12 +6,13 @@ from django.views import View
 
 from ..serializers import FacilitySerializer
 from ..service import facility
+from ..utils.metrics import load_chart
 from ..utils.notify import notify
 
 
 class FacilityView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        query = facility.all()
+        query = facility.get_accessible(request.user)
         serializer = FacilitySerializer()
         facilities = serializer.serialize(query)
         res = '{"success":"true", "facilities": ' + facilities + "}"
@@ -21,6 +22,7 @@ class FacilityView(LoginRequiredMixin, View):
         body = json.loads(request.body)
         facility.create(**body)
         notify()
+        load_chart()
         return JsonResponse(
             {'success': 'true', 'message': 'facility created'})
 

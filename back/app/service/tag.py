@@ -16,3 +16,8 @@ def create(**kwargs):
     for option in kwargs['options']:
         enum_option = Option.objects.create(name=option, tag=tag)
         enum_option.save()
+
+
+def delete(id: int):
+    tag = Tag.objects.get(id=id)
+    tag.delete()
