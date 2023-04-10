@@ -11,6 +11,8 @@ urlpatterns = [
     path('tags/', tag.TagListView.as_view(), name='crud_tags'),
     path('facilities/', facility.FacilityListView.as_view(),
          name='crud_facilities'),
+    path('facilities/<int:id>/', facility.FacilityView.as_view(),
+         name='create_facility'),
     path('solutions/', solution.SolutionListView.as_view(),
          name="create_solution"),
     path('assignments/', assignment.AssignmentView.as_view(),
