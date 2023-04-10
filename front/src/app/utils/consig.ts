@@ -1,1 +1,1 @@
-export const proxy = "http://backend:8000";
+export const proxy = "http://127.0.0.1:8000";
