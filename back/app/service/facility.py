@@ -56,7 +56,7 @@ def update_by_id(id: int, **kwargs):
 
 
 def get_accessible(user: User):
-    if user.manager.role == "admin":
+    if user.manager.role == "a":
         return all()
     facilities = Facility.objects.all().filter(
         work_group=user.manager.work_group)
