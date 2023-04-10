@@ -27,6 +27,6 @@
 
 ### Запуск
 ```
-docker build -t tag
-docker run -p 8000:8000 tag:latest
+docker compose build
+docker compose up
 ```
