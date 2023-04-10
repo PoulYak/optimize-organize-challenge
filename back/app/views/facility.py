@@ -12,7 +12,7 @@ from ..utils.notify import notify
 
 class FacilityView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
-        query = facility.all()
+        query = facility.get_accessible(request.user)
         serializer = FacilitySerializer()
         facilities = serializer.serialize(query)
         res = '{"success":"true", "facilities": ' + facilities + "}"

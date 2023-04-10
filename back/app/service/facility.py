@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.contrib.auth.models import User
 from django.utils.timezone import make_aware
 
 from ..models.facility import Facility
@@ -50,3 +51,11 @@ def update_by_id(id: int, **kwargs):
 
         setattr(facility, arg, kwargs[arg])
     facility.save()
+
+
+def get_accessible(user: User):
+    if user.manager.role == "admin":
+        return all()
+    facilities = Facility.objects.all().filter(
+        work_group=user.manager.work_group)
+    return facilities
