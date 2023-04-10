@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {Tag, TagType, TagValue} from './TagTypes';
+import {Tag, TagType, TagValue} from './utils/TagTypes';
 
 interface Fields {
     files: File[];

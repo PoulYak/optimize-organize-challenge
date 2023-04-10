@@ -1,7 +1,7 @@
 import React, {ChangeEventHandler, FormEvent, useEffect, useState} from 'react';
 import '../../../App.css';
 import "react-datepicker/dist/react-datepicker.css";
-import {Tag, TagValue} from "../../TagTypes";
+import {Tag, TagValue} from "../../utils/TagTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {setTags} from "../../tagsSlice";
 import {RootState} from "../../store";
@@ -16,10 +16,12 @@ import {faPencil, faUpload, faX} from "@fortawesome/free-solid-svg-icons";
 import {fetchFacilities} from "../../facilitiesSlice";
 import {getMediaBase64} from "../../utils/fileUtils";
 import plural from 'plural-ru'
+import {fetchTags} from "../../reducer";
 
 interface Fields {
     files: File[]
     position: LatLng | null
+    work_group: string | null
 }
 
 function Tags({onClose}: { onClose: () => void }) {
@@ -29,20 +31,14 @@ function Tags({onClose}: { onClose: () => void }) {
     const [fields, setFields] = useState<Fields>({
         files: [],
         position: null,
+        work_group: null,
     });
     const tags = useSelector((state: RootState) => state.tagsReducer.tags)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        async function fetchData() {
-            const response = await fetch("/api/tags/")
-            const json = await response.json()
-            dispatch(setTags([...defaultTags, ...json.tags]))
-            console.log(tags)
-        }
-
-        fetchData().then()
-    }, [])
+        dispatch(fetchTags() as any)
+    }, []);
 
     const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -68,6 +64,7 @@ function Tags({onClose}: { onClose: () => void }) {
                     value: value[1] instanceof Date ? "07.03.2004 15:23:45" : value[1]
                 }
             }),
+            work_group: fields.work_group,
             media,
             ...fields.position
         }

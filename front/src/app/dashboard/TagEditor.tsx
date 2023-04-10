@@ -2,7 +2,7 @@ import {Dialog} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus, faRemove, faX} from "@fortawesome/free-solid-svg-icons";
 import React, {FormEvent, useState} from "react";
-import {Tag, TagType, tagTypeNames} from "../TagTypes";
+import {Tag, TagType, tagTypeNames} from "../utils/TagTypes";
 import {useDispatch} from "react-redux";
 import {fetchTags} from "../reducer";
 

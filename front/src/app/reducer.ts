@@ -1,6 +1,6 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {BaseCategoryState, CategoryType,} from "./dashboard/categories/CategoryProps";
-import {Tag, TagType} from "./TagTypes";
+import {Tag, TagType} from "./utils/TagTypes";
 import {Facility} from "./dashboard/FacilityCard";
 import defaultTags from "./defaultTags";
 
@@ -8,11 +8,13 @@ import defaultTags from "./defaultTags";
 export interface RootState {
     categories: BaseCategoryState[],
     tags: Tag[],
+    work_groups: string[],
 }
 
 const initialState: RootState = {
     categories: [],
     tags: [],
+    work_groups: [],
 }
 
 export const fetchTags = createAsyncThunk(
@@ -21,7 +23,9 @@ export const fetchTags = createAsyncThunk(
         const response = await fetch("/api/tags/")
         const body = await response.json()
         const tags: Tag[] = body.tags;
-        return tags
+        // const work_groups = (await (await fetch("/api/workgroups/")).json()).work_groups
+        // const work_groups = ["23"]
+        return {tags}
     }
 )
 
@@ -54,9 +58,10 @@ const slice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchTags.fulfilled, (state, action) => {
-                const tags = action.payload
+                const {tags} = action.payload
                 state.categories = []
                 state.tags = tags
+                // state.work_groups = work_groups
                 for (const tag of [...defaultTags, ...tags]) {
                     if (tag.type === TagType.Enum) {
                         state.categories.push({

@@ -9,7 +9,7 @@ import {CategoryType, toStrings} from "./categories/CategoryProps";
 import CreateDialog from "./create/Tags";
 import {Grid} from "@mui/material";
 import {Facility, FacilityCard} from "./FacilityCard";
-import {Tag} from "../TagTypes";
+import {Tag} from "../utils/TagTypes";
 import {fetchTags, setCheckedCategory} from "../reducer";
 import defaultTags, {tagNames} from "../defaultTags";
 import {CardDialog} from "./card/CardDialog";

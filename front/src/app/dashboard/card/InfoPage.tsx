@@ -1,5 +1,5 @@
 import {Facility, MediaType} from "../FacilityCard";
-import {TagValue} from "../../TagTypes";
+import {TagValue} from "../../utils/TagTypes";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Carousel} from "react-responsive-carousel";

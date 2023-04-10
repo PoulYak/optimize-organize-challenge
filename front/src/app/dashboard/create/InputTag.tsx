@@ -1,6 +1,6 @@
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../store";
-import {Tag, TagType, TagValue} from "../../TagTypes";
+import {Tag, TagType, TagValue} from "../../utils/TagTypes";
 import {setTagValue} from "../../tagsSlice";
 import DatePicker from "react-datepicker";
 import React from "react";
