@@ -69,8 +69,12 @@ def create_chart(data_js):
     sns.countplot(data=data, x="date", hue="status", palette=['#8ecaac', "red"])
     plt.title("Состояние объектов на текущий месяц")
     plt.legend(["Выполнено", "Просрочено"], loc="upper right")
-    plt.savefig(str(settings.MEDIA_ROOT / "chart.png"))
-    return str(settings.MEDIA_ROOT / "chart.png")
+    path_to_image = str(settings.MEDIA_ROOT / "chart.png")
+    plt.savefig(path_to_image, facecolor="#f8f9fd")
+    image = plt.imread(path_to_image)
+    image = image[100:-100, :, :]
+    plt.imsave(path_to_image, image)
+    return path_to_image
 
 
 def load_chart():
