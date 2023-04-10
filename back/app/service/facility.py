@@ -6,6 +6,7 @@ from django.utils.timezone import make_aware
 from ..models.facility import Facility
 from ..models.tag import TagValue
 from ..service import media
+from ..service import work_group
 
 
 def all():
@@ -28,6 +29,7 @@ def create(**kwargs):
         fact_user=kwargs['fact_user'],
         lat=kwargs['lat'],
         lng=kwargs['lng'],
+        work_group=work_group.get_by_name(kwargs['work_group'])
     )
     facility.save()
     for tag_value in kwargs['tags']:
