@@ -5,7 +5,6 @@ from django.http import HttpRequest, JsonResponse
 from ..service import facility
 from ..utils import xslx, xml
 from ..serializers import FacilitySerializer
-from ..utils.metrics import create_chart
 
 
 @login_required
@@ -33,15 +32,3 @@ def create_from_xml(request: HttpRequest) -> JsonResponse:
     xml.create_facilities_from_xml(data)
     return JsonResponse(
         {'success': 'true', 'message': 'objects created successfully'})
-
-
-@login_required
-def get_metrics(request: HttpRequest) -> JsonResponse:
-    if request.method != "GET":
-        return JsonResponse(
-            {'success': 'true', 'message': 'unsupported method'})
-    serializer = FacilitySerializer()
-    s = serializer.serialize(facility.all())
-    path = create_chart(json.loads('{"facilities" :' + s + "}"))
-    return JsonResponse(
-        {'success': 'true', 'path': path})

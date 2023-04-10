@@ -3,6 +3,7 @@ import json
 from django.http import HttpRequest, JsonResponse, HttpResponse
 
 from ..service import assignment
+from ..utils.metrics import load_chart
 from ..utils.notify import notify
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -18,6 +19,7 @@ class AssignmentView(LoginRequiredMixin, View):
         body = json.loads(request.body)
         assignment.create(**body)
         notify()
+        load_chart()
         return JsonResponse(
             {'success': 'true', 'message': 'assignment created'})
 

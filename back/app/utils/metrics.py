@@ -1,8 +1,13 @@
+import json
+
 import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
 from django.conf import settings
+
+from ..serializers import FacilitySerializer
+from ..service import facility
 
 
 def create_chart(data_js):
@@ -66,3 +71,9 @@ def create_chart(data_js):
     plt.legend(["Выполнено", "Просрочено"], loc="upper right")
     plt.savefig(str(settings.MEDIA_ROOT / "chart.png"))
     return str(settings.MEDIA_ROOT / "chart.png")
+
+
+def load_chart():
+    serializer = FacilitySerializer()
+    s = serializer.serialize(facility.all())
+    create_chart(json.loads('{"facilities" :' + s + "}"))
