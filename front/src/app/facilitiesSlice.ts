@@ -1,5 +1,5 @@
 import {Tag} from "./utils/TagTypes";
-import defaultTags from "./defaultTags";
+import defaultTags from "./utils/defaultTags";
 import {Facility} from "./dashboard/FacilityCard";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 

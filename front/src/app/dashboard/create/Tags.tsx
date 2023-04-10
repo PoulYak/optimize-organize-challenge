@@ -5,7 +5,7 @@ import {Tag, TagValue} from "../../utils/TagTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {setTags} from "../../tagsSlice";
 import {RootState} from "../../store";
-import defaultTags, {tagNames} from "../../defaultTags";
+import defaultTags, {tagNames} from "../../utils/defaultTags";
 import {Dialog, DialogTitle} from "@mui/material";
 import {InputTag} from "./InputTag";
 import {MapTag} from "./MapTag";
@@ -21,7 +21,6 @@ import {fetchTags} from "../../reducer";
 interface Fields {
     files: File[]
     position: LatLng | null
-    work_group: string | null
 }
 
 function Tags({onClose}: { onClose: () => void }) {
@@ -31,14 +30,12 @@ function Tags({onClose}: { onClose: () => void }) {
     const [fields, setFields] = useState<Fields>({
         files: [],
         position: null,
-        work_group: null,
     });
-    const tags = useSelector((state: RootState) => state.tagsReducer.tags)
+    const tags = [...defaultTags, ...useSelector((state: RootState) => state.rootReducer.tags)]
     const dispatch = useDispatch()
-
     useEffect(() => {
-        dispatch(fetchTags() as any)
-    }, []);
+        dispatch(setTags())
+    }, [])
 
     const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -53,9 +50,10 @@ function Tags({onClose}: { onClose: () => void }) {
 
         const tagValues = Array.from(tagState.entries());
         const object: { [key: string]: TagValue } = {};
-        for (const [key, value] of tagValues.filter(value1 => value1[0] < 0)) {
+        for (const [key, value] of tagValues.filter(value1 => value1[0] < 0 && value1[0] !== -999)) {
             object[tagNames[key]] = value;
         }
+        let work_group = (tagValues.find(value => value[0] === -999) || [0, ""])[1]
         const formData = {
             ...object,
             tags: tagValues.filter(value => value[0] >= 0).map(value => {
@@ -64,10 +62,12 @@ function Tags({onClose}: { onClose: () => void }) {
                     value: value[1] instanceof Date ? "07.03.2004 15:23:45" : value[1]
                 }
             }),
-            work_group: fields.work_group,
+            work_group,
             media,
             ...fields.position
         }
+
+        console.log(formData)
 
         let body = JSON.stringify(formData);
         console.log(body)

@@ -11,13 +11,14 @@ import {Grid} from "@mui/material";
 import {Facility, FacilityCard} from "./FacilityCard";
 import {Tag} from "../utils/TagTypes";
 import {fetchTags, setCheckedCategory} from "../reducer";
-import defaultTags, {tagNames} from "../defaultTags";
+import defaultTags, {tagNames} from "../utils/defaultTags";
 import {CardDialog} from "./card/CardDialog";
 import {UploadDialog} from "./create/UploadXml";
 import {fetchFacilities} from "../facilitiesSlice";
 import {downloadFile} from "../utils/fileUtils";
 import {fetchLogin} from "../roleSlice";
 import {TagEditor} from "./TagEditor";
+import {UserCreator} from "./UserCreator";
 
 function Dashboard() {
     const [search, setSearch] = useState("");
@@ -25,6 +26,7 @@ function Dashboard() {
     const [uploadOpen, setUploadOpen] = useState(false);
     const [cardOpen, setCardOpen] = useState<number | null>(null);
     const [tagEditorOpen, setTagEditorOpen] = useState(false);
+    const [userCreatorOpen, setUserCreatorOpen] = useState(false);
     const categories = useSelector((state: RootState) => state.rootReducer.categories)
     const facilities = useSelector((state: RootState) => state.facilitiesReducer.facilities)
     const tags = useSelector((state: RootState) => state.rootReducer.tags)
@@ -103,7 +105,11 @@ function Dashboard() {
                 <div className="filter-container">
                     <button className="pretty-button" onClick={() => setTagEditorOpen(true)}>
                         <FontAwesomeIcon icon={faEdit} size="2xl"/>
-                        Редактирование аттрибутов
+                        Редактировать аттрибутов
+                    </button>
+                    <button className="pretty-button" onClick={() => setUserCreatorOpen(true)}>
+                        <FontAwesomeIcon icon={faPlus} size="2xl"/>
+                        Создать пользователя
                     </button>
                     {
                         categories.map((value) => {
@@ -160,13 +166,14 @@ function Dashboard() {
                         <FontAwesomeIcon icon={faPlus} size="2xl"/>
                         Добавить объект
                     </button>
-                    <img src="/media/chart.png" alt="Метрики"/>
+                    <img id="metrics" src="/media/chart.png" alt="Метрики"/>
                 </div>
             </div>
             <CreateDialog open={createOpen} onClose={handleClose}/>
             <UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)}/>
             <CardDialog cardOpened={cardOpen} onClose={() => setCardOpen(null)}/>
             <TagEditor open={tagEditorOpen} onClose={() => setTagEditorOpen(false)} tags={tags}/>
+            <UserCreator open={userCreatorOpen} onClose={() => setUserCreatorOpen(false)}/>
         </div>
     )
 }

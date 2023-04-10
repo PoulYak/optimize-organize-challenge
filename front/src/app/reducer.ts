@@ -1,31 +1,36 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {BaseCategoryState, CategoryType,} from "./dashboard/categories/CategoryProps";
 import {Tag, TagType} from "./utils/TagTypes";
-import {Facility} from "./dashboard/FacilityCard";
-import defaultTags from "./defaultTags";
+import defaultTags from "./utils/defaultTags";
 
 
 export interface RootState {
     categories: BaseCategoryState[],
     tags: Tag[],
-    // work_groups: string[],
 }
 
 const initialState: RootState = {
     categories: [],
     tags: [],
-    // work_groups: [],
 }
 
 export const fetchTags = createAsyncThunk(
     "tags/fetchTags",
-    async () => {
+    async (): Promise<Tag[]> => {
         const response = await fetch("/api/tags/")
         const body = await response.json()
         const tags: Tag[] = body.tags;
-        // const work_groups = (await (await fetch("/api/workgroups/")).json()).work_groups
-        // const work_groups = ["23"]
-        return tags
+        const work_groups = (await (await fetch("/api/workgroups/")).json()).work_groups
+        return [
+            ...tags,
+            {
+                id: -999,
+                name: "Рабочая Группа",
+                type: TagType.Enum,
+                options: work_groups.map((value: any) => value.name),
+                required: true
+            }
+        ]
     }
 )
 
@@ -61,7 +66,6 @@ const slice = createSlice({
                 const tags = action.payload
                 state.categories = []
                 state.tags = tags
-                // state.work_groups = work_groups
                 for (const tag of [...defaultTags, ...tags]) {
                     if (tag.type === TagType.Enum) {
                         state.categories.push({

@@ -1,4 +1,4 @@
-import {Tag, TagType, TagValue} from "./utils/TagTypes";
+import {Tag, TagType, TagValue} from "./TagTypes";
 
 export const tagNames: {[key: number]: string} = {
     [-1]: "region",
