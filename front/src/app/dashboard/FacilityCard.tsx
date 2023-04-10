@@ -25,6 +25,7 @@ export interface Facility {
     area: number;
     owner: string;
     fact_user: string;
+    work_group: string;
     lat: number;
     lng: number;
     media: Media[];

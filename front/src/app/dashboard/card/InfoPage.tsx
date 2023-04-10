@@ -5,6 +5,7 @@ import {faDownload, faUpload} from "@fortawesome/free-solid-svg-icons";
 import {Carousel} from "react-responsive-carousel";
 import {UploadDialog} from "./UploadMedia";
 import {useState} from "react";
+import {proxy} from "../../utils/consig";
 
 interface InfoPageProps {
     facility: Facility
@@ -102,7 +103,7 @@ export function InfoPage(props: InfoPageProps) {
                             return (<li key={index} >
                                 <div className="label-icon-container">
                                     <span title={value.name}>{shrinkText(value.name)}</span>
-                                    <form method="get" action={`http://127.0.0.1:8000/${value.path}`}>
+                                    <form method="get" action={`${proxy}/${value.path}`}>
                                         <button className="icon-button" type="submit">
                                             <FontAwesomeIcon icon={faDownload}/>
                                         </button>

@@ -12,6 +12,7 @@ export function UserCreator(props: DialogProps) {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [workgroup, setWorkgroup] = useState("");
     const [role, setRole] = useState("a");
     const [workgroups, setWorkgroups] = useState<string[]>([]);
@@ -21,6 +22,7 @@ export function UserCreator(props: DialogProps) {
             const response = await fetch('/api/workgroups/')
             const body = await response.json()
             setWorkgroups(body.work_groups.map((value: any) => value.name))
+            setWorkgroup(body.work_groups[0].name)
         }
 
         fetchWorkgroups().then()
@@ -34,10 +36,12 @@ export function UserCreator(props: DialogProps) {
             body: JSON.stringify({
                 name,
                 email,
-                workgroup,
+                password,
+                work_group: workgroup,
                 role
             })
         })
+        props.onClose()
     };
     return (<Dialog open={props.open}>
         <header className="card-header">
@@ -51,7 +55,7 @@ export function UserCreator(props: DialogProps) {
             </div>
         </header>
         <div>
-            <form onChange={submit}>
+            <form onSubmit={submit}>
                 <table>
                     <tbody>
                     <tr>
@@ -61,6 +65,10 @@ export function UserCreator(props: DialogProps) {
                     <tr>
                         <td>Почта</td>
                         <td><input type="email" value={email} required onChange={e => setEmail(e.target.value)}/></td>
+                    </tr>
+                    <tr>
+                        <td>Пароль</td>
+                        <td><input type="password" value={password} required onChange={e => setPassword(e.target.value)}/></td>
                     </tr>
                     <tr>
                         <td>Рабочая группа</td>

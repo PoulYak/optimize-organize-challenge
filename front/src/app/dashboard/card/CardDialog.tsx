@@ -10,6 +10,7 @@ import {AssignmentsPage} from "./AssignmentsPage";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
 import {CalendarPage} from "./CalendarPage";
+import {EditFacility} from "./EditFacility";
 
 interface CardDialogProps {
     cardOpened: number | null;
@@ -26,6 +27,8 @@ enum CardDialogTab {
 }
 
 export function CardDialog(props: CardDialogProps) {
+    const isAdmin = useSelector((state: RootState) => state.roleReducer.isAdmin)
+    const [editFacilityOpen, setEditFacilityOpen] = useState(false);
     const facilities = useSelector((state: RootState) => state.facilitiesReducer.facilities)
     const facility = facilities[props.cardOpened || 0]
     const [tab, setTab] = useState(CardDialogTab.Info);
@@ -49,10 +52,10 @@ export function CardDialog(props: CardDialogProps) {
                         <span className="card-header-status">{statusNames[facility.obj_status || ""]}</span>
                     </div>
                     <div className="card-header-right">
-                        <button className="pretty-button">
+                        {isAdmin ? <button className="pretty-button" onClick={() => setEditFacilityOpen(true)}>
                             <FontAwesomeIcon icon={faPencil}/>
                             Изменить объект
-                        </button>
+                        </button>: null}
                         <button className="close-button" onClick={props.onClose}>
                             <FontAwesomeIcon icon={faX} size="xl"/>
                         </button>
@@ -80,6 +83,7 @@ export function CardDialog(props: CardDialogProps) {
                     }
                 </div>
             </div>
+            <EditFacility facility={facility} open={editFacilityOpen} onClose={() => setEditFacilityOpen(false)}/>
         </div>) : null
         }
     </Dialog>)

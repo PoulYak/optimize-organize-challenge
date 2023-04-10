@@ -3,7 +3,7 @@ import '../../../App.css';
 import "react-datepicker/dist/react-datepicker.css";
 import {Tag, TagValue} from "../../utils/TagTypes";
 import {useDispatch, useSelector} from "react-redux";
-import {setTags} from "../../tagsSlice";
+import {setTags, setTagValue} from "../../tagsSlice";
 import {RootState} from "../../store";
 import defaultTags, {tagNames} from "../../utils/defaultTags";
 import {Dialog, DialogTitle} from "@mui/material";
@@ -17,24 +17,45 @@ import {fetchFacilities} from "../../facilitiesSlice";
 import {getMediaBase64} from "../../utils/fileUtils";
 import plural from 'plural-ru'
 import {fetchTags} from "../../reducer";
+import {Facility} from "../FacilityCard";
 
 interface Fields {
     files: File[]
     position: LatLng | null
 }
 
-function Tags({onClose}: { onClose: () => void }) {
+export function Tags({confirm, facility}: { confirm: (body: any) => void, facility?: Facility }) {
     const tagState = useSelector((state: RootState) => state.tagsReducer.state);
     const [mapOpen, setMapOpen] = useState(false);
+    const dispatch = useDispatch()
 
+    useEffect(() => {
+        console.log('test')
+        dispatch(setTags())
+        if (facility !== undefined) {
+            const tags1 = defaultTags.map(value => {
+                return {
+                    ...value,
+                    value: (facility as any)[tagNames[value.id]]
+                }
+            })
+            console.log(tags1)
+            const _tags = [...tags1, ...facility.tags]
+            console.log(_tags)
+            const tagValues = _tags.map(value => ({id: value.id, value: value.value}))
+            tagValues.push({id: -999, value: facility.work_group})
+            console.log(tagValues)
+            tagValues.forEach(value => {
+                dispatch(setTagValue(value))
+            })
+        }
+    }, []);
     const [fields, setFields] = useState<Fields>({
         files: [],
         position: null,
     });
     const tags = [...defaultTags, ...useSelector((state: RootState) => state.rootReducer.tags)]
-    const dispatch = useDispatch()
     useEffect(() => {
-        dispatch(setTags())
     }, [])
 
     const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -66,18 +87,7 @@ function Tags({onClose}: { onClose: () => void }) {
             media,
             ...fields.position
         }
-
-        console.log(formData)
-
-        let body = JSON.stringify(formData);
-        console.log(body)
-        await fetch("/api/facilities/", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: body
-        })
-        dispatch(fetchFacilities() as any)
-        onClose()
+        confirm(JSON.stringify(formData))
     };
     const changeFiles: ChangeEventHandler<HTMLInputElement> = (event) => {
         setFields(prevState => {
@@ -100,33 +110,35 @@ function Tags({onClose}: { onClose: () => void }) {
 
     return (
         <div className="Tags">
-            <form name="asdsd" onSubmit={onSubmit} >
+            <form name="asdsd" onSubmit={onSubmit}>
                 <table>
                     <tbody>
-                        {
-                            tags.map(value => {
-                                return <InputTag key={value.id} tag={value}/>
-                            })
-                        }
-                        <tr>
-                            <td>
-                                <button id="location-btn" type="button" className={"pretty-button"} onClick={() => setMapOpen(true)}>{fields.position ? fields.position.toString() : "Выберите позицию..."}</button>
-                            </td>
-                            <td>
-                                <label className="pretty-button">
-                                    <input type="file" accept=".doc,.docx,image/png,image/jpeg" onChange={changeFiles} multiple={true}/>
-                                    <FontAwesomeIcon icon={faUpload}/>
-                                    {fields.files.length === 0 ? "Загрузите файлы..." : `${fields.files.length} ${plural(fields.files.length, 'файл', 'файла', 'файлов')}`}
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                <input className="pretty-button" type="submit"/>
-                            </td>
-                        </tr>
+                    {
+                        tags.map(value => {
+                            return <InputTag key={value.id} tag={value}/>
+                        })
+                    }
+                    <tr>
+                        <td>
+                            <button id="location-btn" type="button" className={"pretty-button"}
+                                    onClick={() => setMapOpen(true)}>{fields.position ? fields.position.toString() : "Выберите позицию..."}</button>
+                        </td>
+                        <td>
+                            <label className="pretty-button">
+                                <input type="file" accept=".doc,.docx,image/png,image/jpeg" onChange={changeFiles}
+                                       multiple={true}/>
+                                <FontAwesomeIcon icon={faUpload}/>
+                                {fields.files.length === 0 ? "Загрузите файлы..." : `${fields.files.length} ${plural(fields.files.length, 'файл', 'файла', 'файлов')}`}
+                            </label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            <input className="pretty-button" type="submit"/>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -142,6 +154,7 @@ export interface CreateDialogProps {
 }
 
 function CreateDialog(props: CreateDialogProps) {
+    const dispatch = useDispatch()
     return (
         <Dialog open={props.open}>
             <header className="card-header">
@@ -154,7 +167,16 @@ function CreateDialog(props: CreateDialogProps) {
                     </button>
                 </div>
             </header>
-            <Tags onClose={props.onClose}/>
+            <Tags confirm={async (body) => {
+                console.log(body)
+                await fetch("/api/facilities/", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: body
+                })
+                dispatch(fetchFacilities() as any)
+                props.onClose()
+            }}/>
         </Dialog>
     )
 }

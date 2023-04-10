@@ -19,8 +19,10 @@ import {downloadFile} from "../utils/fileUtils";
 import {fetchLogin} from "../roleSlice";
 import {TagEditor} from "./TagEditor";
 import {UserCreator} from "./UserCreator";
+import {proxy} from "../utils/consig";
 
 function Dashboard() {
+    const isAdmin = useSelector((state: RootState) => state.roleReducer.isAdmin)
     const [search, setSearch] = useState("");
     const [createOpen, setCreateOpen] = useState(false);
     const [uploadOpen, setUploadOpen] = useState(false);
@@ -82,7 +84,7 @@ function Dashboard() {
             })
         })
         const body = await response.json()
-        downloadFile(`http://127.0.0.1:8000${body.path}`, "report.xlsx")
+        downloadFile(`${proxy}${body.path}`, "report.xlsx")
     };
 
     return (
@@ -103,14 +105,18 @@ function Dashboard() {
             </div>
             <div className="container">
                 <div className="filter-container">
-                    <button className="pretty-button" onClick={() => setTagEditorOpen(true)}>
-                        <FontAwesomeIcon icon={faEdit} size="2xl"/>
-                        Редактировать аттрибутов
-                    </button>
-                    <button className="pretty-button" onClick={() => setUserCreatorOpen(true)}>
-                        <FontAwesomeIcon icon={faPlus} size="2xl"/>
-                        Создать пользователя
-                    </button>
+                    {isAdmin ? (
+                    <div>
+                        <button className="pretty-button" onClick={() => setTagEditorOpen(true)}>
+                            <FontAwesomeIcon icon={faEdit} size="2xl"/>
+                            Редактировать аттрибуты
+                        </button>
+                        <button className="pretty-button" onClick={() => setUserCreatorOpen(true)}>
+                            <FontAwesomeIcon icon={faPlus} size="2xl"/>
+                            Создать пользователя
+                        </button>
+                    </div>
+                    ) : null}
                     {
                         categories.map((value) => {
                             return (
@@ -158,21 +164,25 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="right-container">
-                    <button className="pretty-button" onClick={() => setUploadOpen(true)}>
-                        <FontAwesomeIcon icon={faPlus} size="2xl"/>
-                        Добавить объект по xml
-                    </button>
-                    <button className="pretty-button" onClick={() => setCreateOpen(true)}>
-                        <FontAwesomeIcon icon={faPlus} size="2xl"/>
-                        Добавить объект
-                    </button>
+                    {isAdmin ? (<div>
+                            <button className="pretty-button" onClick={() => setUploadOpen(true)}>
+                                <FontAwesomeIcon icon={faPlus} size="2xl"/>
+                                Добавить объект по xml
+                            </button>
+                            <button className="pretty-button" onClick={() => setCreateOpen(true)}>
+                                <FontAwesomeIcon icon={faPlus} size="2xl"/>
+                                Добавить объект
+                            </button>
+                        </div>
+                    ) : null}
                     <img id="metrics" src="/media/chart.png" alt="Метрики"/>
                 </div>
             </div>
             <CreateDialog open={createOpen} onClose={handleClose}/>
             <UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)}/>
             <CardDialog cardOpened={cardOpen} onClose={() => setCardOpen(null)}/>
-            <TagEditor open={tagEditorOpen} onClose={() => setTagEditorOpen(false)} tags={tags}/>
+            <TagEditor open={tagEditorOpen} onClose={() => setTagEditorOpen(false)}
+                       tags={tags.filter(value => value.id != -999)}/>
             <UserCreator open={userCreatorOpen} onClose={() => setUserCreatorOpen(false)}/>
         </div>
     )

@@ -3,7 +3,8 @@ import {RootState} from "../../store";
 import {Tag, TagType, TagValue} from "../../utils/TagTypes";
 import {setTagValue} from "../../tagsSlice";
 import DatePicker from "react-datepicker";
-import React from "react";
+import React, {useEffect} from "react";
+import {Facility} from "../FacilityCard";
 
 export interface TagProps {
     tag: Tag;
@@ -14,6 +15,8 @@ export function InputTag(props: TagProps) {
 
     const tagValue = useSelector((state: RootState) => state.tagsReducer.state.get(tag.id));
     const dispatch = useDispatch();
+
+
 
     const onChange = (value: TagValue) => {
         dispatch(setTagValue({id: tag.id, value}));
