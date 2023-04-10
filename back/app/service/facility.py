@@ -50,8 +50,14 @@ def update_by_id(id: int, **kwargs):
         if arg == 'next_meeting_date':
             facility.next_meeting_date = make_aware(datetime.fromtimestamp(
                 kwargs[arg]))
-
+        if arg == 'tags':
+            continue
         setattr(facility, arg, kwargs[arg])
+    tags = kwargs['tags']
+    for tag in tags:
+        tag_value = facility.tagvalue_set.filter(tag_id=tag['id']).first()
+        tag_value.value = tag['value']
+        tag_value.save()
     facility.save()
 
 
