@@ -65,3 +65,4 @@ def create_chart(data_js):
     plt.title("Состояние объектов на текущий месяц")
     plt.legend(["Выполнено", "Просрочено"], loc="upper right")
     plt.savefig(str(settings.MEDIA_ROOT / "chart.png"))
+    return str(settings.MEDIA_ROOT / "chart.png")

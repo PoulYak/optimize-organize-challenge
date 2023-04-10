@@ -42,6 +42,6 @@ def get_metrics(request: HttpRequest) -> JsonResponse:
             {'success': 'true', 'message': 'unsupported method'})
     serializer = FacilitySerializer()
     s = serializer.serialize(facility.all())
-    create_chart(json.loads('{"facilities" :' + s + "}"))
+    path = create_chart(json.loads('{"facilities" :' + s + "}"))
     return JsonResponse(
-        {'success': 'true', 'message': 'metrics created successfully'})
+        {'success': 'true', 'path': path})
