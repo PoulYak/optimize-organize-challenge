@@ -10,7 +10,7 @@ from ..utils.metrics import load_chart
 from ..utils.notify import notify
 
 
-class FacilityView(LoginRequiredMixin, View):
+class FacilityListView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
         query = facility.get_accessible(request.user)
         serializer = FacilitySerializer()

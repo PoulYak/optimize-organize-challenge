@@ -1,27 +1,26 @@
 import json
 
-from django.http import HttpRequest, JsonResponse, HttpResponse
-
-from ..service import solution
-from ..utils.metrics import load_chart
-from ..utils.notify import notify
-from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, JsonResponse, HttpResponse
+from django.views import View
+from ..service import manager
 
 
-class SolutionListView(LoginRequiredMixin, View):
+class ManagerListView(LoginRequiredMixin, View):
     def get(self, request: HttpRequest, *args,
             **kwargs) -> JsonResponse | HttpResponse:
         return JsonResponse(
             {'success': 'false', 'message': 'unsupported method'}, status=403)
 
     def post(self, request: HttpRequest, *args, **kwargs) -> JsonResponse:
-        body = json.loads(request.body)
-        solution.create(**body)
-        notify()
-        load_chart()
+        user = json.loads(request.body)
+        if request.user.manager.role != "a":
+            return JsonResponse(
+                {"success": "false", "message": "forbidden"}, status=403
+            )
+        manager.create(**user)
         return JsonResponse(
-            {'success': 'true', 'message': 'solution created'})
+            {'success': 'true', 'message': 'user created'})
 
     def head(self, request, *args, **kwargs):
         return JsonResponse(
