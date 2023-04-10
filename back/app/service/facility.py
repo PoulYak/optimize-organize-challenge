@@ -52,6 +52,9 @@ def update_by_id(id: int, **kwargs):
                 kwargs[arg]))
         if arg == 'tags':
             continue
+        if arg == 'work_group':
+            facility.work_group = work_group.get_by_name(kwargs['work_group'])
+            continue
         setattr(facility, arg, kwargs[arg])
     tags = kwargs['tags']
     for tag in tags:
