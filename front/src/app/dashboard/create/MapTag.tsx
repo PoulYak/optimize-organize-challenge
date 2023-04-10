@@ -25,10 +25,12 @@ export interface MapTagProps {
     open: boolean;
 
     onClose(position: LatLng | null): void;
+
+    value: LatLng | null
 }
 
 export function MapTag(props: MapTagProps) {
-    const [position, setPosition] = useState(null as (LatLng | null));
+    const [position, setPosition] = useState(props.value);
 
     return (<Dialog maxWidth="xl" open={props.open}>
         <div className="card-header">

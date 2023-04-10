@@ -30,7 +30,7 @@ export function EditFacility(props: EditFacilityProps) {
         </header>
         <Tags confirm={async (body) => {
             console.log(body)
-            await fetch(`/api/facilities/${props.facility.id}`, {
+            await fetch(`/api/facilities/${props.facility.id}/`, {
                 method: "PUT",
                 headers: {"Content-Type": "application/json"},
                 body: body

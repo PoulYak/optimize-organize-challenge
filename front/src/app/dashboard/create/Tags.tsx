@@ -29,6 +29,11 @@ export function Tags({confirm, facility}: { confirm: (body: any) => void, facili
     const [mapOpen, setMapOpen] = useState(false);
     const dispatch = useDispatch()
 
+    const [fields, setFields] = useState<Fields>({
+        files: [],
+        position: null,
+    });
+
     useEffect(() => {
         console.log('test')
         dispatch(setTags())
@@ -37,6 +42,12 @@ export function Tags({confirm, facility}: { confirm: (body: any) => void, facili
                 return {
                     ...value,
                     value: (facility as any)[tagNames[value.id]]
+                }
+            })
+            setFields(prevState => {
+                return {
+                    ...prevState,
+                    position: new LatLng(facility.lat, facility.lng)
                 }
             })
             console.log(tags1)
@@ -50,10 +61,7 @@ export function Tags({confirm, facility}: { confirm: (body: any) => void, facili
             })
         }
     }, []);
-    const [fields, setFields] = useState<Fields>({
-        files: [],
-        position: null,
-    });
+
     const tags = [...defaultTags, ...useSelector((state: RootState) => state.rootReducer.tags)]
     useEffect(() => {
     }, [])
@@ -143,7 +151,7 @@ export function Tags({confirm, facility}: { confirm: (body: any) => void, facili
                 </table>
 
             </form>
-            <MapTag open={mapOpen} onClose={handleMapClose}/>
+            <MapTag open={mapOpen} value={fields.position} onClose={handleMapClose}/>
         </div>
     );
 }
