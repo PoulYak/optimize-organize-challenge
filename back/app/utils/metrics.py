@@ -2,6 +2,7 @@ import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
 import datetime
+from django.conf import settings
 
 
 def create_chart(data_js):
@@ -12,7 +13,6 @@ def create_chart(data_js):
         dataset["obj_status"].append(i["obj_status"])
 
     data = pd.DataFrame(dataset)
-    # print(data)
     temp_data = data[data["obj_status"] == "w"].groupby("facility_type").agg(
         "count")
 
@@ -59,10 +59,9 @@ def create_chart(data_js):
                 dataset["date"].append(dt.day)
     data = pd.DataFrame(dataset)
     data = data[(data["status"] == "w") | (data["status"] == "d")]
-    data = data.merge(pd.DataFrame({"date": list(range(1, 32))}), how="outer",
-                      on="date")
-    print(data)
+    data = data.merge(pd.DataFrame({"date": list(range(1, 32, 3))}),
+                      how="outer", on="date")
     sns.countplot(data=data, x="date", hue="status", palette=['#8ecaac', "red"])
-    plt.title("Состояние объектов на апрель")
+    plt.title("Состояние объектов на текущий месяц")
     plt.legend(["Выполнено", "Просрочено"], loc="upper right")
-    plt.savefig("chart.png")
+    plt.savefig(str(settings.MEDIA_ROOT / "chart.png"))

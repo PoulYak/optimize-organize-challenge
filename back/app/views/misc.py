@@ -5,6 +5,7 @@ from django.http import HttpRequest, JsonResponse
 from ..service import facility
 from ..utils import xslx, xml
 from ..serializers import FacilitySerializer
+from ..utils.metrics import create_chart
 
 
 @login_required
@@ -39,7 +40,6 @@ def get_metrics(request: HttpRequest) -> JsonResponse:
     if request.method != "GET":
         return JsonResponse(
             {'success': 'true', 'message': 'unsupported method'})
-    from ..utils.metrics import create_chart
     serializer = FacilitySerializer()
     s = serializer.serialize(facility.all())
     create_chart(json.loads('{"facilities" :' + s + "}"))
