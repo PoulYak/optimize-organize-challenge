@@ -1,6 +1,6 @@
 import logo from '../../logo.svg';
 
-export const statusNames: { [key: string]: string} = {
+export const statusNames: { [key: string]: string } = {
     n: "Нет поручений",
     c: "Закрыт",
     w: "В работе",
@@ -72,13 +72,15 @@ export interface Assignment {
     description: string;
     status: AssignmentStatus;
 }
+
 export interface FacilityCardProps {
     facility: Facility
+
     onClick(): void;
 }
 
 export function FacilityCard(props: FacilityCardProps) {
-    const { facility } = props;
+    const {facility} = props;
 
     let x: any
     let picture = facility.media.find(value => value.type === MediaType.Picture);
@@ -91,9 +93,13 @@ export function FacilityCard(props: FacilityCardProps) {
 
     return (
         <div onClick={event => props.onClick()} className="FacilityCard">
-            <img src={x} className="Card-image" alt="Image"/>
-            <p>{facility.address}</p>
-            <p className="status">{statusNames[facility.obj_status]}</p>
+            <div className="facility-card-body">
+                <img src={x} className="Card-image" alt="Image"/>
+                <p>{facility.address}</p>
+            </div>
+            <div className="facility-card-footer">
+                <p className="status">{statusNames[facility.obj_status]}</p>
+            </div>
         </div>
     );
 }

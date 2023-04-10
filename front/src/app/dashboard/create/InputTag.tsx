@@ -19,28 +19,27 @@ export function InputTag(props: TagProps) {
         dispatch(setTagValue({id: tag.id, value}));
     };
 
-    switch (tag.type) {
-        case TagType.Date:
-            return <div>
-                <DatePicker id={`input-tag-${tag.id}`} name={tag.name}
-                            value={((tagValue || new Date()) as Date).toDateString()}
-                            onChange={date => date && onChange(date)}/>
-                <label htmlFor={`input-tag-${tag.id}`}>{tag.name}</label>
-            </div>
+    const x = (() => {
+        switch (tag.type) {
+            case TagType.Date:
+                return <td>
+                    <DatePicker id={`input-tag-${tag.id}`} name={tag.name}
+                                value={((tagValue || new Date()) as Date).toDateString()}
+                                onChange={date => date && onChange(date)}/>
+                </td>
 
-        case TagType.Boolean:
-        case TagType.Enum:
-            let options = tag.options
-            if (tag.type === TagType.Boolean) {
-                options = ["Да", "Нет"]
-            }
-            if (options === undefined) break;
+            case TagType.Boolean:
+            case TagType.Enum:
+                let options = tag.options
+                if (tag.type === TagType.Boolean) {
+                    options = ["Да", "Нет"]
+                }
+                if (options === undefined) break;
 
-            if (!tag.required) {
-                options = ["", ...options]
-            }
-            return (
-                <div>
+                if (!tag.required) {
+                    options = ["", ...options]
+                }
+                return (
                     <select id={`input-tag-${tag.id}`} required={tag.required}
                             value={tagValue as string}
                             onChange={event => onChange(event.target.value)}>
@@ -50,27 +49,30 @@ export function InputTag(props: TagProps) {
                             })
                         }
                     </select>
-                    <label htmlFor={`input-tag-${tag.id}`}>{tag.name}</label>
-                </div>
-            )
-        case TagType.Number:
-            return (
-                <div>
+                )
+            case TagType.Number:
+                return (
                     <input id={`input-tag-${tag.id}`} type="number" required={tag.required} name={tag.name}
                            value={tagValue as number}
                            onChange={event => onChange(event.target.value)}/>
-                    <label htmlFor={`input-tag-${tag.id}`}>{tag.name}</label>
-                </div>
-            )
-        case TagType.String:
-            return (
-                <div>
+                )
+            case TagType.String:
+                return (
                     <input id={`input-tag-${tag.id}`} type="text" required={tag.required} name={tag.name}
                            value={tagValue as string}
                            onChange={event => onChange(event.target.value)}/>
-                    <label htmlFor={`input-tag-${tag.id}`}>{tag.name}</label>
-                </div>
-            )
-    }
-    return <div/>
+                )
+        }
+    })()
+
+    return (<tr>
+        <td>
+            <label>{tag.name}{tag.required ? "*" : ""}</label>
+        </td>
+        <td>
+            {
+                x
+            }
+        </td>
+    </tr>)
 }

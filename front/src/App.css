@@ -11,7 +11,7 @@
     flex-direction: column;
     gap: 20px;
     height: 100vh;
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Manrope', sans-serif !important;
     /*font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;*/
 }
 
@@ -31,6 +31,10 @@ input[type="submit"] {
     background: #01d28e;
     border: 1px solid #01d28e;
     color: #fff;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .form input[type="submit"]:hover {
@@ -110,7 +114,7 @@ input[type="submit"] {
     width: 100%;
     border: 1px solid rgba(0, 0, 0, 0.2);
     background: #f8f9fd;
-    border-radius: 10px;
+    border-radius: 5px;
     margin: 5px 5px 5px 7px;
     height: 30px;
 }
@@ -132,25 +136,23 @@ input[type="submit"] {
 }
 
 .search-btn {
-    flex-basis: 100px;
+    flex-basis: 70px;
     margin: 5px 0;
+    padding-left: 0;
     justify-content: center;
     align-items: center;
     background: none;
-    cursor: pointer;
     border: none;
+    font-size: 1.0em !important;
 }
 
 .search-btn path {
     transition: color 0.3s ease;
 }
 
-.search-btn:hover path {
-    transition: color 0.3s ease;
-    color: black;
-}
 
 .filter-container {
+    margin-top: 20px;
     margin-left: 40px;
     max-width: 300px;
     flex-basis: 300px;
@@ -174,15 +176,16 @@ input[type="submit"] {
 .tags-container {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 1120px;
     box-sizing: border-box;
     justify-content: stretch;
     flex-wrap: wrap;
-    padding: 10px;
-    margin-left: 17px;
+    padding: 20px 10px 10px;
+    margin-left: 2px;
 }
 
 .report-btn {
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     height: 20px;
@@ -195,6 +198,7 @@ input[type="submit"] {
     margin: 3px;
     color: white;
     border-radius: 5px;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .report-btn svg {
@@ -204,6 +208,11 @@ input[type="submit"] {
 .report-btn path {
     color: white;
     transition: color 0.3s ease-in-out;
+}
+
+.report-btn:hover {
+    box-shadow: 2px 2px 10px 0 var(--accent-color);
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .Badge {
@@ -236,6 +245,10 @@ input[type="submit"] {
 .Badge:hover path {
     color: black;
     transition: color 0.3s ease-in-out;
+}
+
+button, button span {
+    font-family: Manrope, sans-serif;
 }
 
 .Badge p {
@@ -345,12 +358,14 @@ input[type="checkbox"]:before {
     flex: 1;
     max-width: 400px;
     margin-right: 40px;
+    padding-top: 20px;
     /*background: #6cf0c2;*/
 }
 
 .pretty-button {
     background: none;
     border: var(--main-color) 1px solid;
+    color: var(--main-color);
     padding: 5px;
     margin: 3px;
     border-radius: 5px;
@@ -372,24 +387,33 @@ input[type="checkbox"]:before {
 }
 
 .FacilityCard {
-    width: 320px;
-    height: 426px;
-    margin: 30px;
+    width: 250px;
+    height: 320px;
+    margin: 15px;
     box-shadow: 0 0 7px rgba(103, 159, 133, 0.25);
-    border-radius: 5px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    /*justify-content: space-between;*/
 }
 
 .FacilityCard img {
-    width: 260px;
-    height: 260px;
-    margin: 30px 30px 0;
+    width: 210px;
+    height: 210px;
+    margin: 20px 20px 0;
     border-radius: 5px;
 }
 
 .FacilityCard p {
-    margin: 0;
-    text-align: center;
+    width: 210px;
+    margin: 0 0 0 20px;
+    text-align: left;
 }
+
+.facility-card-body {
+
+}
+
 
 .cards-grid {
     height: auto;
@@ -397,14 +421,18 @@ input[type="checkbox"]:before {
 }
 
 .FacilityCard p.status {
-    margin-top: 45px;
-    margin-right: 10px;
-    text-align: end;
+    text-align: left;
+    margin: 0 0 5px 20px;
     color: var(--main-color);
 }
 
 .Category h2 {
     margin-left: 10px;
+}
+
+.card-main {
+    width: 900px;
+    height: 800px;
 }
 
 .card-header {
@@ -431,7 +459,7 @@ input[type="checkbox"]:before {
 
 .card-dialog {
     width: 900px;
-    overflow: visible;
+    overflow: auto;
 }
 
 .close-button {
@@ -453,25 +481,35 @@ input[type="checkbox"]:before {
 
 .overflow {
     overflow: visible !important;
-    border-radius: 16px !important;
+    border-radius: 10px !important;
 }
 
 .card-tabs {
     position: absolute;
-    top: -24px;
+    top: -34px;
     margin-left: 24px;
 }
 
 .card-tab {
     background: var(--accent-color);
-    padding: 0 10px;
+    padding: 5px 15px;
     font-size: 12pt;
-    /*text-color*/
+    color: white;
     border: solid var(--accent-color) 1px;
     border-radius: 8px 8px 0 0;
+    transition: background-color, border-bottom-color, border-left-color, border-right-color, border-top-color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
+}
+
+.card-tab:hover {
+    cursor: pointer;
 }
 
 .card-tab.selected {
+    transition: background-color, border-bottom-color, border-left-color, border-right-color, border-top-color;
+    transition-duration: 0.5s;
+    transition-timing-function: ease-in-out;
     background: var(--main-color);
     border: solid var(--main-color) 1px;
 }
@@ -516,36 +554,32 @@ input[type="checkbox"]:before {
     margin-left: 10px;
     height: 28px;
     width: 28px;
+}
+
+.icon-button, .icon-button-wide {
+
     justify-content: center;
     align-items: center;
     background: var(--main-color);
     cursor: pointer;
     border: none;
+    border: none;
+    color: white;
     border-radius: 5px;
 }
 
 .icon-button-wide {
     padding: 0 30px;
     height: 28px;
-    justify-content: center;
-    align-items: center;
-    background: var(--main-color);
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
 }
 
-.icon-button path, .icon-button-wide path {
-    color: white;
-    transition: color 0.3s ease;
+.icon-button, .icon-button-wide {
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-.icon-button:hover path, .icon-button-wide:hover path {
-    transition: color 0.3s ease;
-    color: black;
-}
-
-.icon-button-wide {
+.icon-button:hover, .icon-button-wide:hover {
+    box-shadow: 2px 2px 10px 0 var(--accent-color);
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .SolutionsPage {

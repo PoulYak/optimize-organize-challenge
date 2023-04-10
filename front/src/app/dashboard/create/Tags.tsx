@@ -12,10 +12,10 @@ import {MapTag} from "./MapTag";
 import {DomUtil, LatLng} from "leaflet";
 import setPosition = DomUtil.setPosition;
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faPencil, faX} from "@fortawesome/free-solid-svg-icons";
+import {faPencil, faUpload, faX} from "@fortawesome/free-solid-svg-icons";
 import {fetchFacilities} from "../../facilitiesSlice";
 import {getMediaBase64} from "../../utils/fileUtils";
-
+import plural from 'plural-ru'
 
 interface Fields {
     files: File[]
@@ -104,14 +104,35 @@ function Tags({onClose}: { onClose: () => void }) {
     return (
         <div className="Tags">
             <form name="asdsd" onSubmit={onSubmit} >
-                {
-                    tags.map(value => {
-                        return <InputTag key={value.id} tag={value}/>
-                    })
-                }
-                <input type="file" accept=".doc,.docx,image/png,image/jpeg" onChange={changeFiles} multiple={true}/>
-                <button id="location-btn" type="button" className={"pretty-button"} onClick={() => setMapOpen(true)}>{fields.position ? fields.position.toString() : "Выберите позицию..."}</button>
-                <input type="submit"/>
+                <table>
+                    <tbody>
+                        {
+                            tags.map(value => {
+                                return <InputTag key={value.id} tag={value}/>
+                            })
+                        }
+                        <tr>
+                            <td>
+                                <button id="location-btn" type="button" className={"pretty-button"} onClick={() => setMapOpen(true)}>{fields.position ? fields.position.toString() : "Выберите позицию..."}</button>
+                            </td>
+                            <td>
+                                <label className="pretty-button">
+                                    <input type="file" accept=".doc,.docx,image/png,image/jpeg" onChange={changeFiles} multiple={true}/>
+                                    <FontAwesomeIcon icon={faUpload}/>
+                                    {fields.files.length === 0 ? "Загрузите файлы..." : `${fields.files.length} ${plural(fields.files.length, 'файл', 'файла', 'файлов')}`}
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <input className="pretty-button" type="submit"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </form>
             <MapTag open={mapOpen} onClose={handleMapClose}/>
         </div>

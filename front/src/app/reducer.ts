@@ -1,39 +1,34 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {BaseCategoryState, CategoryType,} from "./dashboard/categories/CategoryProps";
 import {Tag, TagType} from "./TagTypes";
 import {Facility} from "./dashboard/FacilityCard";
+import defaultTags from "./defaultTags";
 
 
 export interface RootState {
-    categories: BaseCategoryState[]
+    categories: BaseCategoryState[],
+    tags: Tag[],
 }
 
 const initialState: RootState = {
-    categories: []
+    categories: [],
+    tags: [],
 }
+
+export const fetchTags = createAsyncThunk(
+    "tags/fetchTags",
+    async () => {
+        const response = await fetch("/api/tags/")
+        const body = await response.json()
+        const tags: Tag[] = body.tags;
+        return tags
+    }
+)
 
 const slice = createSlice({
     name: 'root',
     initialState,
     reducers: {
-        initTags(state, action: PayloadAction<{
-            tags: Tag[]
-        }>) {
-            const {tags} = action.payload
-            state.categories = []
-            for (const tag of tags) {
-                if (tag.type === TagType.Enum) {
-                    state.categories.push({
-                        id: tag.id,
-                        name: tag.name,
-                        type: CategoryType.EnumCategory,
-                        value: new Map(tag.options?.map(value => {
-                            return [value, false]
-                        }))
-                    })
-                }
-            }
-        },
         setCheckedCategory(state, action: PayloadAction<{
             category: string,
             value: string,
@@ -56,7 +51,27 @@ const slice = createSlice({
             }
         }
     },
+    extraReducers: (builder) => {
+        builder
+            .addCase(fetchTags.fulfilled, (state, action) => {
+                const tags = action.payload
+                state.categories = []
+                state.tags = tags
+                for (const tag of [...defaultTags, ...tags]) {
+                    if (tag.type === TagType.Enum) {
+                        state.categories.push({
+                            id: tag.id,
+                            name: tag.name,
+                            type: CategoryType.EnumCategory,
+                            value: new Map(tag.options?.map(value => {
+                                return [value, false]
+                            }))
+                        })
+                    }
+                }
+            })
+    }
 });
 
-export const {setCheckedCategory, setNumberCategory, initTags} = slice.actions;
+export const {setCheckedCategory, setNumberCategory} = slice.actions;
 export default slice.reducer;

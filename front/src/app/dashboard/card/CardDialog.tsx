@@ -1,5 +1,5 @@
 import {Facility, statusNames} from "../FacilityCard";
-import {css, Dialog, Paper} from "@mui/material";
+import {css, Dialog, DialogTitle, Paper} from "@mui/material";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencil, faX} from "@fortawesome/free-solid-svg-icons";
 import {InfoPage} from "./InfoPage";
@@ -9,6 +9,7 @@ import {SolutionsPage} from "./SolutionsPage";
 import {AssignmentsPage} from "./AssignmentsPage";
 import {useSelector} from "react-redux";
 import {RootState} from "../../store";
+import {CalendarPage} from "./CalendarPage";
 
 interface CardDialogProps {
     cardOpened: number | null;
@@ -30,7 +31,7 @@ export function CardDialog(props: CardDialogProps) {
     const [tab, setTab] = useState(CardDialogTab.Info);
 
     return (<Dialog classes={{paperWidthXl: "overflow", root: "card-dialog-root"}} maxWidth={"xl"}
-                    open={props.cardOpened !== null}>
+                    open={props.cardOpened !== null} scroll="body">
         {facility ? (<div className="card-dialog">
             <div className={"card-tabs"}>
                 {
@@ -73,7 +74,7 @@ export function CardDialog(props: CardDialogProps) {
                                 case CardDialogTab.Assignments:
                                     return <AssignmentsPage facility={facility}/>;
                                 case CardDialogTab.Calendar:
-                                    return <div/>;
+                                    return <CalendarPage facility={facility}/>;
                             }
                         })()
                     }

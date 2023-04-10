@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Badge} from "./Badge";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faDownload, faMagnifyingGlass, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faDownload, faEdit, faMagnifyingGlass, faPlus} from "@fortawesome/free-solid-svg-icons";
 import {Category} from "./categories/Category";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../store";
@@ -10,33 +10,28 @@ import CreateDialog from "./create/Tags";
 import {Grid} from "@mui/material";
 import {Facility, FacilityCard} from "./FacilityCard";
 import {Tag} from "../TagTypes";
-import {initTags, setCheckedCategory} from "../reducer";
+import {fetchTags, setCheckedCategory} from "../reducer";
 import defaultTags, {tagNames} from "../defaultTags";
 import {CardDialog} from "./card/CardDialog";
 import {UploadDialog} from "./create/UploadXml";
 import {fetchFacilities} from "../facilitiesSlice";
 import {downloadFile} from "../utils/fileUtils";
 import {fetchLogin} from "../roleSlice";
+import {TagEditor} from "./TagEditor";
 
 function Dashboard() {
     const [search, setSearch] = useState("");
     const [createOpen, setCreateOpen] = useState(false);
     const [uploadOpen, setUploadOpen] = useState(false);
     const [cardOpen, setCardOpen] = useState<number | null>(null);
+    const [tagEditorOpen, setTagEditorOpen] = useState(false);
     const categories = useSelector((state: RootState) => state.rootReducer.categories)
     const facilities = useSelector((state: RootState) => state.facilitiesReducer.facilities)
+    const tags = useSelector((state: RootState) => state.rootReducer.tags)
     const dispatch = useDispatch()
     useEffect(() => {
-        async function fetchTags() {
-            const response = await fetch("/api/tags/")
-            const body = await response.json()
-            const _tags: Tag[] = body.tags;
-            const tags = [...defaultTags, ..._tags]
-            dispatch(initTags({tags}))
-        }
-
         dispatch(fetchFacilities() as any)
-        fetchTags().then()
+        dispatch(fetchTags() as any)
     }, []);
 
 
@@ -97,7 +92,7 @@ function Dashboard() {
                                onChange={event => setSearch(event.target.value)}/>
                     </div>
                     <button type="submit" className="search-btn">
-                        <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" color="#f8f9fd"/>
+                        <FontAwesomeIcon icon={faMagnifyingGlass} size="xl" color="#f8f9fd"/>
                     </button>
                 </form>
                 <div className="logout-btn-container">
@@ -106,6 +101,10 @@ function Dashboard() {
             </div>
             <div className="container">
                 <div className="filter-container">
+                    <button className="pretty-button" onClick={() => setTagEditorOpen(true)}>
+                        <FontAwesomeIcon icon={faEdit} size="2xl"/>
+                        Редактирование аттрибутов
+                    </button>
                     {
                         categories.map((value) => {
                             return (
@@ -153,7 +152,6 @@ function Dashboard() {
                     </div>
                 </div>
                 <div className="right-container">
-                    <h2>Право</h2>
                     <button className="pretty-button" onClick={() => setUploadOpen(true)}>
                         <FontAwesomeIcon icon={faPlus} size="2xl"/>
                         Добавить объект по xml
@@ -162,11 +160,13 @@ function Dashboard() {
                         <FontAwesomeIcon icon={faPlus} size="2xl"/>
                         Добавить объект
                     </button>
+                    <img src="/media/chart.png" alt="Метрики"/>
                 </div>
             </div>
             <CreateDialog open={createOpen} onClose={handleClose}/>
             <UploadDialog open={uploadOpen} onClose={() => setUploadOpen(false)}/>
             <CardDialog cardOpened={cardOpen} onClose={() => setCardOpen(null)}/>
+            <TagEditor open={tagEditorOpen} onClose={() => setTagEditorOpen(false)} tags={tags}/>
         </div>
     )
 }
